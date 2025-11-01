@@ -47,7 +47,7 @@ describe('RLS Demo - Data Insertion', () => {
     // Insert products
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user1.id
+      'request.jwt.claim.sub': user1.id
     });
 
     const product1 = await db.one(
@@ -59,7 +59,7 @@ describe('RLS Demo - Data Insertion', () => {
     
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user2.id
+      'request.jwt.claim.sub': user2.id
     });
 
     const product2 = await db.one(
@@ -96,7 +96,7 @@ describe('RLS Demo - Data Insertion', () => {
     // insert products
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user1.id
+      'request.jwt.claim.sub': user1.id
     });
 
     await db.one(
@@ -108,7 +108,7 @@ describe('RLS Demo - Data Insertion', () => {
     
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user2.id
+      'request.jwt.claim.sub': user2.id
     });
 
     await db.one(
@@ -143,7 +143,7 @@ describe('RLS Demo - Data Insertion', () => {
     // set context to simulate authenticated user with jwt claims
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user.id
+      'request.jwt.claim.sub': user.id
     });
 
     // test auth.uid() function
@@ -182,7 +182,7 @@ describe('RLS Demo - Data Insertion', () => {
     // set context to user1
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user1.id
+      'request.jwt.claim.sub': user1.id
     });
 
     // this should work - user1 accessing their own data

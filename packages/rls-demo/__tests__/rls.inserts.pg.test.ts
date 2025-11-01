@@ -49,7 +49,7 @@ describe('RLS Demo - Data Insertion', () => {
     // insert products
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user_id_1
+      'request.jwt.claim.sub': user_id_1
     });
 
     const product1 = await db.one(
@@ -61,7 +61,7 @@ describe('RLS Demo - Data Insertion', () => {
 
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user_id_2
+      'request.jwt.claim.sub': user_id_2
     });
 
     const product2 = await db.one(

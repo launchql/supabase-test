@@ -40,7 +40,7 @@ describe('tutorial: basic rls crud operations', () => {
     // set context to simulate authenticated user
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user.id
+      'request.jwt.claim.sub': user.id
     });
 
     // verify user can see their own record
@@ -66,7 +66,7 @@ describe('tutorial: basic rls crud operations', () => {
     // set context to simulate authenticated user
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user.id
+      'request.jwt.claim.sub': user.id
     });
 
     // user can create their own product
@@ -108,7 +108,7 @@ describe('tutorial: basic rls crud operations', () => {
     // set context to simulate authenticated user
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user.id
+      'request.jwt.claim.sub': user.id
     });
 
     // user can read their own products
@@ -134,7 +134,7 @@ describe('tutorial: basic rls crud operations', () => {
     // set context to simulate authenticated user
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user.id
+      'request.jwt.claim.sub': user.id
     });
 
     // user can update their own record
@@ -170,7 +170,7 @@ describe('tutorial: basic rls crud operations', () => {
     // set context to simulate authenticated user
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user.id
+      'request.jwt.claim.sub': user.id
     });
 
     // user can update their own product
@@ -212,7 +212,7 @@ describe('tutorial: basic rls crud operations', () => {
     // set context to simulate authenticated user
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user.id
+      'request.jwt.claim.sub': user.id
     });
 
     // user can delete their own product
@@ -244,7 +244,7 @@ describe('tutorial: basic rls crud operations', () => {
     // set context to simulate authenticated user
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user.id
+      'request.jwt.claim.sub': user.id
     });
 
     // user can delete their own record

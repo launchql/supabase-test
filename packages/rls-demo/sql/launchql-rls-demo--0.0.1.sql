@@ -3,7 +3,7 @@ CREATE SCHEMA IF NOT EXISTS auth;
 
 CREATE OR REPLACE FUNCTION auth.uid() RETURNS uuid LANGUAGE sql STABLE AS $EOFCODE$
   SELECT COALESCE(
-    current_setting('jwt.claims.user_id', true)::uuid,
+    current_setting('request.jwt.claim.sub', true)::uuid,
     current_setting('jwt.claims.sub', true)::uuid
   );
 $EOFCODE$;

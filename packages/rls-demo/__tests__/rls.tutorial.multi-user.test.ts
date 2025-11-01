@@ -47,7 +47,7 @@ describe('tutorial: multi-user rls enforcement', () => {
     // set context to user1
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user1.id
+      'request.jwt.claim.sub': user1.id
     });
 
     // user1 can see their own data
@@ -97,7 +97,7 @@ describe('tutorial: multi-user rls enforcement', () => {
     // set context to user1
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user1.id
+      'request.jwt.claim.sub': user1.id
     });
 
     // user1 can see their own products
@@ -135,7 +135,7 @@ describe('tutorial: multi-user rls enforcement', () => {
     // set context to user1
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user1.id
+      'request.jwt.claim.sub': user1.id
     });
 
     // user1 can update their own data
@@ -186,7 +186,7 @@ describe('tutorial: multi-user rls enforcement', () => {
     // set context to user1
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user1.id
+      'request.jwt.claim.sub': user1.id
     });
 
     // user1 can update their own product
@@ -237,7 +237,7 @@ describe('tutorial: multi-user rls enforcement', () => {
     // set context to user1
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user1.id
+      'request.jwt.claim.sub': user1.id
     });
 
     // user1 can delete their own product
@@ -273,7 +273,7 @@ describe('tutorial: multi-user rls enforcement', () => {
     // set context to user1
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user1.id
+      'request.jwt.claim.sub': user1.id
     });
 
     // user1 can create product for themselves
@@ -322,7 +322,7 @@ describe('tutorial: multi-user rls enforcement', () => {
     // set context to user1
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user1.id
+      'request.jwt.claim.sub': user1.id
     });
 
     // user1 should only see their own record in a list query
