@@ -40,9 +40,8 @@ describe('tutorial: testing with sql file seeding', () => {
       `INSERT INTO rls_test.users (email, name) 
        VALUES ($1, $2) 
        RETURNING id`,
-      ['advanced1@example.com', 'Advanced User 1']
+      ['sql-seed1@example.com', 'SQL Seed User 1']
     );
-    console.log('user', user);
 
     db.setContext({
       role: 'authenticated',
