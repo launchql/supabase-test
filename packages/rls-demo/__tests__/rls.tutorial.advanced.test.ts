@@ -1,18 +1,10 @@
 import { getConnections, PgTestClient } from 'pgsql-test';
 
-let pg: PgTestClient;
 let db: PgTestClient;
 let teardown: () => Promise<void>;
 
 beforeAll(async () => {
-  // use existing supabase database connection
-  process.env.PGHOST = '127.0.0.1';
-  process.env.PGPORT = '54322';
-  process.env.PGUSER = 'supabase_admin';
-  process.env.PGPASSWORD = 'postgres';
-  process.env.PGDATABASE = 'postgres';
-  
-  ({ pg, db, teardown } = await getConnections());
+  ({ db, teardown } = await getConnections());
 });
 
 afterAll(async () => {
@@ -30,13 +22,10 @@ afterEach(async () => {
 describe('tutorial: advanced rls edge cases and scenarios', () => {
 
 
+  it('supatest', async () => {
 
+    db.setContext({ role: 'service_role' });
 
-  it('should prevent anon users from accessing any data', async () => {
-
-    db.setContext({ role: 'service_role' }); // ensure bypass for initial seed
-    // create user and product as admin
-    // const user = await pg.one(
     const user = await db.one(
       `INSERT INTO rls_test.users (email, name) 
        VALUES ($1, $2) 
@@ -44,84 +33,54 @@ describe('tutorial: advanced rls edge cases and scenarios', () => {
       ['advanced1@example.com', 'Advanced User 1']
     );
     console.log('user', user);
-    
-    // COMMENTED OUT
-    // // create product as that user via authenticated context
-    // db.setContext({
-    //   role: 'authenticated',
-    //   'jwt.claims.user_id': user.id
-    // });
-    // // harden: ensure the guc is a valid uuid string (avoid empty-string edge cases)
-    // await db.any(`SELECT set_config('jwt.claims.user_id', $1, true)`, [String(user.id)]);
 
-    // switch to authenticated and set the claim RLS actually reads
-    const claims = JSON.stringify({ sub: String(user.id), role: 'authenticated' });
-    // db.setContext({
-    //   role: 'authenticated',
-    //   'request.jwt.claims': claims
-    // });
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user.id,
-      'request.jwt.claims': claims
+      'request.jwt.claim.sub': user.id
     });
-    // make it local to the current transaction (pgsql-test wraps tests in a tx)
-    // await db.any(`SELECT set_config('request.jwt.claims', $1, true)`, [claims]);
-
-    await db.any(`
-      SELECT 
-        set_config('jwt.claims.user_id', $1, true),
-        set_config('request.jwt.claims', $2, true)
-    `, [String(user.id), claims]);
-
-
-    console.log('user.id', user.id);
 
     await db.one(
       `INSERT INTO rls_test.products (name, description, price, owner_id) 
        VALUES ($1, $2, $3, $4) 
        RETURNING id`,
-      // ['Secret Product', 'Should not be visible', 100.00, String(user.id)]
       ['Secret Product', 'Should not be visible', 100.00, user.id]
     );
-    
 
-    // COMMENTED OUT
-    // set context to anon role and clear jwt claims to avoid leaking prior uid
-    // db.setContext({
-    //   role: 'anon',
-    //   'jwt.claims.user_id': null
-    // });
-    db.setContext({ role: 'anon', 'request.jwt.claims': null });
+    const verifiedUsers = await db.any(
+      `SELECT id FROM rls_test.users WHERE id = $1`,
+      [user.id]
+    );
+    expect(verifiedUsers.length).toBe(1);
+
+    const verifiedProducts = await db.any(
+      `SELECT id FROM rls_test.products WHERE owner_id = $1`,
+      [user.id]
+    );
+    expect(verifiedProducts.length).toBe(1);
+
     db.clearContext();
-
-
-    let q = `SELECT id FROM rls_test.users WHERE id = '${user.id}'`
-    console.log('q', q);
-
-    // anon user cannot see any users
+    
     const anonUsers = await db.any(
       `SELECT id FROM rls_test.users WHERE id = $1`,
       [user.id]
     );
     expect(anonUsers.length).toBe(0);
 
-    // // anon user cannot see any products
-    // const anonProducts = await db.any(
-    //   `SELECT id FROM rls_test.products WHERE owner_id = $1`,
-    //   [user.id]
-    // );
-    // expect(anonProducts.length).toBe(0);
+    const anonProducts = await db.any(
+      `SELECT id FROM rls_test.products WHERE owner_id = $1`,
+      [user.id]
+    );
+    expect(anonProducts.length).toBe(0);
+
   });
 
-
-
-
-
-  
+    
   it('should handle empty result sets correctly with rls', async () => {
+
+    db.setContext({ role: 'service_role' });
+
     // create user as admin
-    const user = await pg.one(
+    const user = await db.one(
       `INSERT INTO rls_test.users (email, name) 
        VALUES ($1, $2) 
        RETURNING id`,
@@ -131,7 +90,7 @@ describe('tutorial: advanced rls edge cases and scenarios', () => {
     // set context to simulate authenticated user
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user.id
+      'request.jwt.claim.sub': user.id
     });
 
     // user has no products yet, query should return empty array
@@ -145,15 +104,18 @@ describe('tutorial: advanced rls edge cases and scenarios', () => {
   });
 
   it('should handle updates that affect no rows due to rls', async () => {
+
+    db.setContext({ role: 'service_role' });
+
     // create two users as admin
-    const user1 = await pg.one(
+    const user1 = await db.one(
       `INSERT INTO rls_test.users (email, name) 
        VALUES ($1, $2) 
        RETURNING id`,
       ['advanced3@example.com', 'Advanced User 3']
     );
 
-    const user2 = await pg.one(
+    const user2 = await db.one(
       `INSERT INTO rls_test.users (email, name) 
        VALUES ($1, $2) 
        RETURNING id`,
@@ -175,7 +137,7 @@ describe('tutorial: advanced rls edge cases and scenarios', () => {
     // set context to user1
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user1.id
+      'request.jwt.claim.sub': user1.id
     });
 
     // user1 tries to update user2's product - should affect 0 rows
@@ -192,15 +154,18 @@ describe('tutorial: advanced rls edge cases and scenarios', () => {
   });
 
   it('should respect rls when counting all records', async () => {
+
+    db.setContext({ role: 'service_role' });
+
     // create multiple users as admin
-    const user1 = await pg.one(
+    const user1 = await db.one(
       `INSERT INTO rls_test.users (email, name) 
        VALUES ($1, $2) 
        RETURNING id`,
       ['advanced5@example.com', 'Advanced User 5']
     );
 
-    const user2 = await pg.one(
+    const user2 = await db.one(
       `INSERT INTO rls_test.users (email, name) 
        VALUES ($1, $2) 
        RETURNING id`,
@@ -236,7 +201,7 @@ describe('tutorial: advanced rls edge cases and scenarios', () => {
     // set context to user1
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user1.id
+      'request.jwt.claim.sub': user1.id
     });
 
     // user1 should only count their own products
@@ -248,8 +213,11 @@ describe('tutorial: advanced rls edge cases and scenarios', () => {
   });
 
   it('should handle cascade deletes correctly with rls', async () => {
+
+    db.setContext({ role: 'service_role' });
+
     // create user as admin
-    const user = await pg.one(
+    const user = await db.one(
       `INSERT INTO rls_test.users (email, name) 
        VALUES ($1, $2) 
        RETURNING id`,
@@ -277,7 +245,7 @@ describe('tutorial: advanced rls edge cases and scenarios', () => {
     // set context to simulate authenticated user
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user.id
+      'request.jwt.claim.sub': user.id
     });
 
     // user deletes themselves - products should cascade delete
@@ -287,7 +255,7 @@ describe('tutorial: advanced rls edge cases and scenarios', () => {
     );
 
     // verify products are gone (using admin to check)
-    const remainingProducts = await pg.any(
+    const remainingProducts = await db.any(
       `SELECT id FROM rls_test.products WHERE owner_id = $1`,
       [user.id]
     );
@@ -296,22 +264,25 @@ describe('tutorial: advanced rls edge cases and scenarios', () => {
   });
 
   it('should prevent user from seeing other users\' data even with broad queries', async () => {
+
+    db.setContext({ role: 'service_role' });
+
     // create three users as admin
-    const user1 = await pg.one(
+    const user1 = await db.one(
       `INSERT INTO rls_test.users (email, name) 
        VALUES ($1, $2) 
        RETURNING id`,
       ['advanced8@example.com', 'Advanced User 8']
     );
 
-    const user2 = await pg.one(
+    const user2 = await db.one(
       `INSERT INTO rls_test.users (email, name) 
        VALUES ($1, $2) 
        RETURNING id`,
       ['advanced9@example.com', 'Advanced User 9']
     );
 
-    const user3 = await pg.one(
+    const user3 = await db.one(
       `INSERT INTO rls_test.users (email, name) 
        VALUES ($1, $2) 
        RETURNING id`,
@@ -347,7 +318,7 @@ describe('tutorial: advanced rls edge cases and scenarios', () => {
     // set context to user1
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user1.id
+      'request.jwt.claim.sub': user1.id
     });
 
     // user1 should only see their own products even with broad query
@@ -361,8 +332,11 @@ describe('tutorial: advanced rls edge cases and scenarios', () => {
   });
 
   it('should verify rls works with null values in auth context', async () => {
+
+    db.setContext({ role: 'service_role' });
+
     // create user as admin
-    const user = await pg.one(
+    const user = await db.one(
       `INSERT INTO rls_test.users (email, name) 
        VALUES ($1, $2) 
        RETURNING id`,
@@ -372,7 +346,7 @@ describe('tutorial: advanced rls edge cases and scenarios', () => {
     // set context with null user_id (should prevent access)
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': null
+      'request.jwt.claim.sub': null
     });
 
     // should not be able to access user data with null user_id
@@ -382,15 +356,18 @@ describe('tutorial: advanced rls edge cases and scenarios', () => {
   });
 
   it('should demonstrate transaction isolation with rls', async () => {
+
+    db.setContext({ role: 'service_role' });
+
     // create two users as admin
-    const user1 = await pg.one(
+    const user1 = await db.one(
       `INSERT INTO rls_test.users (email, name) 
        VALUES ($1, $2) 
        RETURNING id`,
       ['advanced12@example.com', 'Advanced User 12']
     );
 
-    const user2 = await pg.one(
+    const user2 = await db.one(
       `INSERT INTO rls_test.users (email, name) 
        VALUES ($1, $2) 
        RETURNING id`,
@@ -400,7 +377,7 @@ describe('tutorial: advanced rls edge cases and scenarios', () => {
     // user1 creates a product in their context
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user1.id
+      'request.jwt.claim.sub': user1.id
     });
 
     const product1 = await db.one(
@@ -413,7 +390,7 @@ describe('tutorial: advanced rls edge cases and scenarios', () => {
     // switch to user2 context
     db.setContext({
       role: 'authenticated',
-      'jwt.claims.user_id': user2.id
+      'request.jwt.claim.sub': user2.id
     });
 
     // user2 cannot see user1's product
