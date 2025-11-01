@@ -27,20 +27,16 @@ afterEach(async () => {
   await db.afterEach();
 });
 
-describe('tutorial: advanced rls edge cases and scenarios', () => {
-
-
-  it('supatest', async () => {
-
+describe('tutorial: testing with seeded data', () => {
+  it('should work with launchql seed function', async () => {
     db.setContext({ role: 'service_role' });
 
     const user = await db.one(
       `INSERT INTO rls_test.users (email, name) 
        VALUES ($1, $2) 
        RETURNING id`,
-      ['advanced1@example.com', 'Advanced User 1']
+      ['seeding1@example.com', 'Seeding User 1']
     );
-    console.log('user', user);
 
     db.setContext({
       role: 'authenticated',
@@ -51,7 +47,7 @@ describe('tutorial: advanced rls edge cases and scenarios', () => {
       `INSERT INTO rls_test.products (name, description, price, owner_id) 
        VALUES ($1, $2, $3, $4) 
        RETURNING id`,
-      ['Secret Product', 'Should not be visible', 100.00, user.id]
+      ['Seeded Product', 'Product created with seeded schema', 100.00, user.id]
     );
 
     const verifiedUsers = await db.any(
@@ -79,8 +75,6 @@ describe('tutorial: advanced rls edge cases and scenarios', () => {
       [user.id]
     );
     expect(anonProducts.length).toBe(0);
-
   });
-
 });
 

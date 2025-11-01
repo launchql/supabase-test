@@ -86,6 +86,68 @@ describe('tutorial: complex rls queries with joins and aggregations', () => {
     expect(result[0].product_price).toBe('200.00');
   });
 
+  it('should filter results with rls when querying all users and products', async () => {
+    db.setContext({ role: 'service_role' });
+
+    // create multiple users as admin
+    const user1 = await db.one(
+      `INSERT INTO rls_test.users (email, name) 
+       VALUES ($1, $2) 
+       RETURNING id, email, name`,
+      ['complex-join1@example.com', 'Complex Join User 1']
+    );
+
+    const user2 = await db.one(
+      `INSERT INTO rls_test.users (email, name) 
+       VALUES ($1, $2) 
+       RETURNING id, email, name`,
+      ['complex-join2@example.com', 'Complex Join User 2']
+    );
+
+    // create products for both users
+    db.setContext({
+      role: 'authenticated',
+      'request.jwt.claim.sub': user1.id
+    });
+
+    await db.one(
+      `INSERT INTO rls_test.products (name, description, price, owner_id) 
+       VALUES ($1, $2, $3, $4) 
+       RETURNING id, name, price, owner_id`,
+      ['User1 Product', 'User1 owns', 199.99, user1.id]
+    );
+
+    db.setContext({
+      role: 'authenticated',
+      'request.jwt.claim.sub': user2.id
+    });
+
+    await db.one(
+      `INSERT INTO rls_test.products (name, description, price, owner_id) 
+       VALUES ($1, $2, $3, $4) 
+       RETURNING id, name, price, owner_id`,
+      ['User2 Product', 'User2 owns', 89.99, user2.id]
+    );
+
+    // set context to user1 and query all users/products - rls should filter to only user1's data
+    db.setContext({
+      role: 'authenticated',
+      'request.jwt.claim.sub': user1.id
+    });
+
+    const result = await db.many(
+      `SELECT u.name, p.name as product_name, p.price
+       FROM rls_test.users u
+       JOIN rls_test.products p ON u.id = p.owner_id
+       ORDER BY u.name, p.name`
+    );
+
+    expect(result.length).toBe(1);
+    expect(result[0].name).toBe('Complex Join User 1');
+    expect(result[0].product_name).toBe('User1 Product');
+    expect(Number(result[0].price)).toBe(199.99);
+  });
+
   it('should allow user to aggregate their own product data', async () => {
     db.setContext({ role: 'service_role' });
 

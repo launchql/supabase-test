@@ -20,10 +20,7 @@ afterEach(async () => {
 });
 
 describe('tutorial: advanced rls edge cases and scenarios', () => {
-
-
-  it('supatest', async () => {
-
+  it('should prevent anon users from accessing any data', async () => {
     db.setContext({ role: 'service_role' });
 
     const user = await db.one(
@@ -32,7 +29,6 @@ describe('tutorial: advanced rls edge cases and scenarios', () => {
        RETURNING id`,
       ['advanced1@example.com', 'Advanced User 1']
     );
-    console.log('user', user);
 
     db.setContext({
       role: 'authenticated',
@@ -71,7 +67,6 @@ describe('tutorial: advanced rls edge cases and scenarios', () => {
       [user.id]
     );
     expect(anonProducts.length).toBe(0);
-
   });
 
     

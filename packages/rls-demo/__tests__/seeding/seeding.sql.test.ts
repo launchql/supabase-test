@@ -31,9 +31,8 @@ afterEach(async () => {
   await db.afterEach();
 });
 
-describe('tutorial: advanced rls edge cases and scenarios', () => {
-
-  it('supatest', async () => {
+describe('tutorial: testing with sql file seeding', () => {
+  it('should work with sql file seed function', async () => {
 
     db.setContext({ role: 'service_role' });
 
