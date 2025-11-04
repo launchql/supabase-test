@@ -68,8 +68,16 @@ describe('tutorial: vault secrets table access', () => {
       return;
     }
     
-    // verify columns structure (metadata already checked in beforeAll)
-    expect(vaultTableExists).toBe(true);
+    db.setContext({ role: 'service_role' });
+    
+    const columns = await db.any(
+      `SELECT column_name, data_type 
+       FROM information_schema.columns 
+       WHERE table_schema = 'vault' AND table_name = 'secrets'
+       ORDER BY ordinal_position`
+    );
+    
+    expect(Array.isArray(columns)).toBe(true);
   });
 
   it('should verify rls or grants are configured for secrets', async () => {
@@ -77,8 +85,17 @@ describe('tutorial: vault secrets table access', () => {
       return;
     }
     
-    // verify rls status (metadata already checked in beforeAll)
-    expect(vaultTableExists).toBe(true);
+    db.setContext({ role: 'service_role' });
+    
+    const rlsStatus = await db.any(
+      `SELECT c.relrowsecurity 
+       FROM pg_class c
+       JOIN pg_namespace n ON n.oid = c.relnamespace
+       WHERE n.nspname = 'vault' AND c.relname = 'secrets'`
+    );
+    
+    expect(rlsStatus.length).toBeGreaterThan(0);
+    expect(typeof rlsStatus[0].relrowsecurity).toBe('boolean');
   });
 
   it('should prevent anon from accessing secrets', async () => {

@@ -4,6 +4,8 @@ let pg: PgTestClient;
 let db: PgTestClient;
 let teardown: () => Promise<void>;
 
+let tableExists = false;
+
 beforeAll(async () => {
   process.env.PGHOST = '127.0.0.1';
   process.env.PGPORT = '54322';
@@ -25,9 +27,23 @@ beforeAll(async () => {
   // grant access to auth schema for testing
   await pg.any(
     `GRANT USAGE ON SCHEMA auth TO public;
-     GRANT SELECT ON ALL TABLES IN SCHEMA auth TO service_role;`,
+     GRANT SELECT ON ALL TABLES IN SCHEMA auth TO service_role;
+     GRANT SELECT ON ALL TABLES IN SCHEMA auth TO authenticated;
+     GRANT SELECT ON ALL TABLES IN SCHEMA auth TO anon;
+     ALTER DEFAULT PRIVILEGES IN SCHEMA auth GRANT SELECT ON TABLES TO service_role;
+     ALTER DEFAULT PRIVILEGES IN SCHEMA auth GRANT SELECT ON TABLES TO authenticated;
+     ALTER DEFAULT PRIVILEGES IN SCHEMA auth GRANT SELECT ON TABLES TO anon;`,
     []
   );
+  
+  // check if auth.identities table exists (using pg in beforeAll only)
+  const exists = await pg.any(
+    `SELECT EXISTS (
+      SELECT FROM information_schema.tables 
+      WHERE table_schema = 'auth' AND table_name = 'identities'
+    ) as exists`
+  );
+  tableExists = exists[0]?.exists === true;
 });
 
 afterAll(async () => {
@@ -43,18 +59,6 @@ afterEach(async () => {
 });
 
 describe('tutorial: auth identities table access', () => {
-  let tableExists = false;
-
-  beforeAll(async () => {
-    db.setContext({ role: 'service_role' });
-    const exists = await db.any(
-      `SELECT EXISTS (
-        SELECT FROM information_schema.tables 
-        WHERE table_schema = 'auth' AND table_name = 'identities'
-      ) as exists`
-    );
-    tableExists = exists[0]?.exists === true;
-  });
 
   it('should verify identities table exists', async () => {
     db.setContext({ role: 'service_role' });

@@ -4,6 +4,8 @@ let pg: PgTestClient;
 let db: PgTestClient;
 let teardown: () => Promise<void>;
 
+let tableExists = false;
+
 beforeAll(async () => {
   process.env.PGHOST = '127.0.0.1';
   process.env.PGPORT = '54322';
@@ -13,16 +15,35 @@ beforeAll(async () => {
   
   ({ pg, db, teardown } = await getConnections());
   
+  // verify storage schema exists
+  const storageSchemaExists = await pg.any(
+    `SELECT EXISTS (
+      SELECT FROM information_schema.schemata 
+      WHERE schema_name = 'storage'
+    ) as exists`
+  );
+  expect(storageSchemaExists[0].exists).toBe(true);
+  
   // grant access to storage schema for testing
-  try {
-    await pg.any(
-      `GRANT USAGE ON SCHEMA storage TO public;
-       GRANT SELECT ON ALL TABLES IN SCHEMA storage TO service_role;`,
-      []
-    );
-  } catch (err) {
-    // schema might not exist or grants might already exist
-  }
+  await pg.any(
+    `GRANT USAGE ON SCHEMA storage TO public;
+     GRANT SELECT ON ALL TABLES IN SCHEMA storage TO service_role;
+     GRANT SELECT ON ALL TABLES IN SCHEMA storage TO authenticated;
+     GRANT SELECT ON ALL TABLES IN SCHEMA storage TO anon;
+     ALTER DEFAULT PRIVILEGES IN SCHEMA storage GRANT SELECT ON TABLES TO service_role;
+     ALTER DEFAULT PRIVILEGES IN SCHEMA storage GRANT SELECT ON TABLES TO authenticated;
+     ALTER DEFAULT PRIVILEGES IN SCHEMA storage GRANT SELECT ON TABLES TO anon;`,
+    []
+  );
+  
+  // check if storage.buckets table exists (using pg in beforeAll only)
+  const exists = await pg.any(
+    `SELECT EXISTS (
+      SELECT FROM information_schema.tables 
+      WHERE table_schema = 'storage' AND table_name = 'buckets'
+    ) as exists`
+  );
+  tableExists = exists[0]?.exists === true;
 });
 
 afterAll(async () => {
@@ -38,18 +59,6 @@ afterEach(async () => {
 });
 
 describe('tutorial: storage buckets table access', () => {
-  let tableExists = false;
-
-  beforeAll(async () => {
-    db.setContext({ role: 'service_role' });
-    const exists = await db.any(
-      `SELECT EXISTS (
-        SELECT FROM information_schema.tables 
-        WHERE table_schema = 'storage' AND table_name = 'buckets'
-      ) as exists`
-    );
-    tableExists = exists[0]?.exists === true;
-  });
 
   it('should verify buckets table exists', async () => {
     db.setContext({ role: 'service_role' });
@@ -76,21 +85,13 @@ describe('tutorial: storage buckets table access', () => {
     
     db.setContext({ role: 'service_role' });
     
-    try {
-      const buckets = await db.any(
-        `SELECT id, name, owner, created_at, updated_at 
-         FROM storage.buckets 
-         LIMIT 10`
-      );
-      
-      expect(Array.isArray(buckets)).toBe(true);
-    } catch (err: any) {
-      if (err.message?.includes('permission denied') || err.message?.includes('does not exist')) {
-        expect(Array.isArray([])).toBe(true);
-      } else {
-        throw err;
-      }
-    }
+    const buckets = await db.any(
+      `SELECT id, name, owner, created_at, updated_at 
+       FROM storage.buckets 
+       LIMIT 10`
+    );
+    
+    expect(Array.isArray(buckets)).toBe(true);
   });
 
   it('should verify table has primary key on id', async () => {
@@ -158,19 +159,12 @@ describe('tutorial: storage buckets table access', () => {
     
     db.clearContext();
     
-    try {
-      const result = await db.any(
-        `SELECT * FROM storage.buckets LIMIT 1`
-      );
-      
-      expect(result.length).toBe(0);
-    } catch (err: any) {
-      if (err.message?.includes('permission denied') || err.message?.includes('does not exist')) {
-        expect(true).toBe(true);
-      } else {
-        throw err;
-      }
-    }
+    const result = await db.any(
+      `SELECT * FROM storage.buckets LIMIT 1`
+    );
+    
+    // rls should block access, result should be empty
+    expect(result.length).toBe(0);
   });
 });
 

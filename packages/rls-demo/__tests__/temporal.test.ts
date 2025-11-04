@@ -62,8 +62,20 @@ describe('tutorial: rls with temporal columns on supabase tables', () => {
   it('should verify storage.objects has temporal columns', async () => {
     expect(temporalTableExists).toBe(true);
     
-    // verify temporal columns exist (metadata already checked in beforeAll)
-    expect(temporalTableExists).toBe(true);
+    db.setContext({ role: 'service_role' });
+    
+    const columns = await db.any(
+      `SELECT column_name, data_type 
+       FROM information_schema.columns 
+       WHERE table_schema = 'storage' 
+         AND table_name = 'objects' 
+         AND column_name IN ('created_at', 'updated_at', 'last_accessed_at')`
+    );
+    
+    expect(Array.isArray(columns)).toBe(true);
+    // at least created_at should exist
+    const hasCreatedAt = columns.some((c: any) => c.column_name === 'created_at');
+    expect(hasCreatedAt).toBe(true);
   });
 
   it('should verify service_role can query temporal columns', async () => {

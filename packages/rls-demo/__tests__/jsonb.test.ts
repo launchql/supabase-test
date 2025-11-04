@@ -74,8 +74,18 @@ describe('tutorial: rls with jsonb columns on supabase tables', () => {
   it('should verify storage.objects has metadata jsonb column', async () => {
     expect(jsonbTableExists).toBe(true);
     
-    // verify metadata column exists (metadata already checked in beforeAll)
-    expect(jsonbTableExists).toBe(true);
+    db.setContext({ role: 'service_role' });
+    
+    const columns = await db.any(
+      `SELECT column_name, data_type 
+       FROM information_schema.columns 
+       WHERE table_schema = 'storage' 
+         AND table_name = 'objects' 
+         AND column_name = 'metadata'`
+    );
+    
+    expect(columns.length).toBe(1);
+    expect(columns[0].data_type).toBe('jsonb');
   });
 
   it('should verify service_role can query jsonb metadata fields', async () => {

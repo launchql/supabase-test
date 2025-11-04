@@ -68,8 +68,19 @@ describe('tutorial: storage objects table access with rls', () => {
       return;
     }
     
-    // verify rls status (metadata already checked in beforeAll)
-    expect(tableExists).toBe(true);
+    db.setContext({ role: 'service_role' });
+    
+    const rlsStatus = await db.any(
+      `SELECT c.relrowsecurity 
+       FROM pg_class c
+       JOIN pg_namespace n ON n.oid = c.relnamespace
+       WHERE n.nspname = 'storage' AND c.relname = 'objects'`
+    );
+    
+    expect(Array.isArray(rlsStatus)).toBe(true);
+    if (rlsStatus.length > 0) {
+      expect(typeof rlsStatus[0].relrowsecurity).toBe('boolean');
+    }
   });
 
   it('should verify service_role can read objects', async () => {
@@ -91,8 +102,19 @@ describe('tutorial: storage objects table access with rls', () => {
       return;
     }
     
-    // verify primary key exists (metadata already checked in beforeAll)
-    expect(tableExists).toBe(true);
+    db.setContext({ role: 'service_role' });
+    
+    const pk = await db.any(
+      `SELECT constraint_name 
+       FROM information_schema.table_constraints 
+       WHERE table_schema = 'storage' AND table_name = 'objects'
+       AND constraint_type = 'PRIMARY KEY'`
+    );
+    
+    expect(Array.isArray(pk)).toBe(true);
+    if (pk.length > 0) {
+      expect(pk[0].constraint_name).toBeDefined();
+    }
   });
 
   it('should verify table has unique index on bucket_id and name', async () => {
@@ -100,8 +122,16 @@ describe('tutorial: storage objects table access with rls', () => {
       return;
     }
     
-    // verify unique index exists (metadata already checked in beforeAll)
-    expect(tableExists).toBe(true);
+    db.setContext({ role: 'service_role' });
+    
+    const indexes = await db.any(
+      `SELECT indexname 
+       FROM pg_indexes 
+       WHERE schemaname = 'storage' AND tablename = 'objects'
+       AND indexname = 'bucketid_objname'`
+    );
+    
+    expect(Array.isArray(indexes)).toBe(true);
   });
 
   it('should verify table has foreign key to buckets', async () => {
@@ -109,8 +139,20 @@ describe('tutorial: storage objects table access with rls', () => {
       return;
     }
     
-    // verify foreign key exists (metadata already checked in beforeAll)
-    expect(tableExists).toBe(true);
+    db.setContext({ role: 'service_role' });
+    
+    const fks = await db.any(
+      `SELECT tc.constraint_name, ccu.table_name AS foreign_table_name
+       FROM information_schema.table_constraints AS tc
+       JOIN information_schema.constraint_column_usage AS ccu
+         ON ccu.constraint_name = tc.constraint_name
+       WHERE tc.constraint_type = 'FOREIGN KEY' 
+         AND tc.table_schema = 'storage' 
+         AND tc.table_name = 'objects'
+         AND ccu.table_name = 'buckets'`
+    );
+    
+    expect(Array.isArray(fks)).toBe(true);
   });
 
   it('should prevent anon from accessing objects', async () => {
