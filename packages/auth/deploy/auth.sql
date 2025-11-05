@@ -996,3 +996,102 @@ CREATE EVENT TRIGGER pgrst_ddl_watch ON ddl_command_end
 CREATE EVENT TRIGGER pgrst_drop_watch ON sql_drop
    EXECUTE FUNCTION extensions.pgrst_drop_watch();
 
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------- 14
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+
+
+
+
+
+-------------------supabase_functions https://github.com/supabase/cli/blob/8f3bf1cde284bf594f7e59349bc0a1817ad46400/internal/utils/templates/initial_schemas/14.sql#L1512
+
+
+
+--
+-- Name: supabase_functions; Type: SCHEMA; Schema: -; Owner: supabase_admin
+--
+
+CREATE SCHEMA IF NOT EXISTS supabase_functions;
+
+
+ALTER SCHEMA supabase_functions OWNER TO supabase_admin;
+
+--
+-- Name: SCHEMA supabase_functions; Type: ACL; Schema: -; Owner: supabase_admin
+--
+
+GRANT USAGE ON SCHEMA supabase_functions TO postgres;
+GRANT USAGE ON SCHEMA supabase_functions TO anon;
+GRANT USAGE ON SCHEMA supabase_functions TO authenticated;
+GRANT USAGE ON SCHEMA supabase_functions TO service_role;
+GRANT ALL ON SCHEMA supabase_functions TO supabase_functions_admin;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: supabase_functions; Owner: supabase_admin
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA supabase_functions GRANT ALL ON SEQUENCES  TO postgres;
+ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA supabase_functions GRANT ALL ON SEQUENCES  TO anon;
+ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA supabase_functions GRANT ALL ON SEQUENCES  TO authenticated;
+ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA supabase_functions GRANT ALL ON SEQUENCES  TO service_role;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: supabase_functions; Owner: supabase_admin
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA supabase_functions GRANT ALL ON FUNCTIONS  TO postgres;
+ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA supabase_functions GRANT ALL ON FUNCTIONS  TO anon;
+ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA supabase_functions GRANT ALL ON FUNCTIONS  TO authenticated;
+ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA supabase_functions GRANT ALL ON FUNCTIONS  TO service_role;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: supabase_functions; Owner: supabase_admin
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA supabase_functions GRANT ALL ON TABLES  TO postgres;
+ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA supabase_functions GRANT ALL ON TABLES  TO anon;
+ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA supabase_functions GRANT ALL ON TABLES  TO authenticated;
+ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA supabase_functions GRANT ALL ON TABLES  TO service_role;
+
+
+
+--------------https://github.com/supabase/cli/blob/8f3bf1cde284bf594f7e59349bc0a1817ad46400/internal/db/start/templates/webhook.sql#L24
+
+
+-- supabase_functions.migrations definition
+CREATE TABLE supabase_functions.migrations (
+  version text PRIMARY KEY,
+  inserted_at timestamptz NOT NULL DEFAULT NOW()
+);
+
+
+-- Initial supabase_functions migration
+INSERT INTO supabase_functions.migrations (version) VALUES ('initial');
+
+-- supabase_functions.hooks definition
+CREATE TABLE supabase_functions.hooks (
+  id bigserial PRIMARY KEY,
+  hook_table_id integer NOT NULL,
+  hook_name text NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT NOW(),
+  request_id bigint
+);
+CREATE INDEX supabase_functions_hooks_request_id_idx ON supabase_functions.hooks USING btree (request_id);
+CREATE INDEX supabase_functions_hooks_h_table_id_h_name_idx ON supabase_functions.hooks USING btree (hook_table_id, hook_name);
+COMMENT ON TABLE supabase_functions.hooks IS 'Supabase Functions Hooks: Audit trail for triggered hooks.';
