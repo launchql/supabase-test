@@ -17,8 +17,8 @@ beforeAll(async () => {
   expect(authSchemaExists[0].exists).toBe(true);
   
   // grants
-  await pg.any(
-    `GRANT USAGE ON SCHEMA auth TO public;
+    await pg.any(
+      `GRANT USAGE ON SCHEMA auth TO public;
      GRANT SELECT ON ALL TABLES IN SCHEMA auth TO service_role;
      GRANT SELECT ON ALL TABLES IN SCHEMA auth TO authenticated;
      GRANT SELECT ON ALL TABLES IN SCHEMA auth TO anon;
@@ -135,7 +135,7 @@ describe('tutorial: auth mfa_amr_claims table access', () => {
     const result = await db.any(`SELECT * FROM auth.mfa_amr_claims LIMIT 1`);
     expect(Array.isArray(result)).toBe(true);
     if (rlsStatus[0].relrowsecurity === true) {
-      expect(result.length).toBe(0);
+    expect(result.length).toBe(0);
     }
   });
 });

@@ -19,8 +19,8 @@ beforeAll(async () => {
   expect(authSchemaExists[0].exists).toBe(true);
   
   // grant access to auth schema for testing
-  await pg.any(
-    `GRANT USAGE ON SCHEMA auth TO public;
+    await pg.any(
+      `GRANT USAGE ON SCHEMA auth TO public;
      GRANT SELECT ON ALL TABLES IN SCHEMA auth TO service_role;
      GRANT SELECT ON ALL TABLES IN SCHEMA auth TO authenticated;
      GRANT SELECT ON ALL TABLES IN SCHEMA auth TO anon;

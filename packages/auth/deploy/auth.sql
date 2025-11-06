@@ -1791,3 +1791,399 @@ BEGIN
     EXECUTE 'ALTER function "storage".extension(text) owner to ' || super_user;
     EXECUTE 'ALTER function "storage".search(text,text,int,int,int) owner to ' || super_user;
 END$$;
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------- FOR STORAGE
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+-------------------storage -- https://github.com/supabase/storage/blob/6ba23e408dc700e4e2ca5527eed1cf8c60ced218/migrations/tenant/0026-objects-prefixes.sql#L36
+
+-- Add level column to objects
+ALTER TABLE storage.objects ADD COLUMN IF NOT EXISTS level INT NULL;
+
+--- Index Functions
+CREATE OR REPLACE FUNCTION "storage"."get_level"("name" text)
+    RETURNS int
+AS $func$
+SELECT array_length(string_to_array("name", '/'), 1);
+$func$ LANGUAGE SQL IMMUTABLE STRICT;
+
+-- Table
+CREATE TABLE IF NOT EXISTS "storage"."prefixes" (
+    "bucket_id" text,
+    "name" text COLLATE "C" NOT NULL,
+    "level" int GENERATED ALWAYS AS ("storage"."get_level"("name")) STORED,
+    "created_at" timestamptz DEFAULT now(),
+    "updated_at" timestamptz DEFAULT now(),
+    CONSTRAINT "prefixes_bucketId_fkey" FOREIGN KEY ("bucket_id") REFERENCES "storage"."buckets"("id"),
+    PRIMARY KEY ("bucket_id", "level", "name")
+);
+
+ALTER TABLE storage.prefixes ENABLE ROW LEVEL SECURITY;
+
+-- Functions
+CREATE OR REPLACE FUNCTION "storage"."get_prefix"("name" text)
+    RETURNS text
+AS $func$
+SELECT
+    CASE WHEN strpos("name", '/') > 0 THEN
+             regexp_replace("name", '[\/]{1}[^\/]+\/?$', '')
+         ELSE
+             ''
+        END;
+$func$ LANGUAGE SQL IMMUTABLE STRICT;
+
+CREATE OR REPLACE FUNCTION "storage"."get_prefixes"("name" text)
+    RETURNS text[]
+AS $func$
+DECLARE
+    parts text[];
+    prefixes text[];
+    prefix text;
+BEGIN
+    -- Split the name into parts by '/'
+    parts := string_to_array("name", '/');
+    prefixes := '{}';
+
+    -- Construct the prefixes, stopping one level below the last part
+    FOR i IN 1..array_length(parts, 1) - 1 LOOP
+            prefix := array_to_string(parts[1:i], '/');
+            prefixes := array_append(prefixes, prefix);
+    END LOOP;
+
+    RETURN prefixes;
+END;
+$func$ LANGUAGE plpgsql IMMUTABLE STRICT;
+
+CREATE OR REPLACE FUNCTION "storage"."add_prefixes"(
+    "_bucket_id" TEXT,
+    "_name" TEXT
+)
+RETURNS void
+SECURITY DEFINER
+AS $func$
+DECLARE
+    prefixes text[];
+BEGIN
+    prefixes := "storage"."get_prefixes"("_name");
+
+    IF array_length(prefixes, 1) > 0 THEN
+        INSERT INTO storage.prefixes (name, bucket_id)
+        SELECT UNNEST(prefixes) as name, "_bucket_id" ON CONFLICT DO NOTHING;
+    END IF;
+END;
+$func$ LANGUAGE plpgsql VOLATILE;
+
+CREATE OR REPLACE FUNCTION "storage"."delete_prefix" (
+    "_bucket_id" TEXT,
+    "_name" TEXT
+) RETURNS boolean
+SECURITY DEFINER
+AS $func$
+BEGIN
+    -- Check if we can delete the prefix
+    IF EXISTS(
+        SELECT FROM "storage"."prefixes"
+        WHERE "prefixes"."bucket_id" = "_bucket_id"
+          AND level = "storage"."get_level"("_name") + 1
+          AND "prefixes"."name" COLLATE "C" LIKE "_name" || '/%'
+        LIMIT 1
+    )
+    OR EXISTS(
+        SELECT FROM "storage"."objects"
+        WHERE "objects"."bucket_id" = "_bucket_id"
+          AND "storage"."get_level"("objects"."name") = "storage"."get_level"("_name") + 1
+          AND "objects"."name" COLLATE "C" LIKE "_name" || '/%'
+        LIMIT 1
+    ) THEN
+    -- There are sub-objects, skip deletion
+    RETURN false;
+    ELSE
+        DELETE FROM "storage"."prefixes"
+        WHERE "prefixes"."bucket_id" = "_bucket_id"
+          AND level = "storage"."get_level"("_name")
+          AND "prefixes"."name" = "_name";
+        RETURN true;
+    END IF;
+END;
+$func$ LANGUAGE plpgsql VOLATILE;
+
+-- Triggers
+CREATE OR REPLACE FUNCTION "storage"."prefixes_insert_trigger"()
+    RETURNS trigger
+AS $func$
+BEGIN
+    PERFORM "storage"."add_prefixes"(NEW."bucket_id", NEW."name");
+    RETURN NEW;
+END;
+$func$ LANGUAGE plpgsql VOLATILE;
+
+CREATE OR REPLACE FUNCTION "storage"."objects_insert_prefix_trigger"()
+    RETURNS trigger
+AS $func$
+BEGIN
+    PERFORM "storage"."add_prefixes"(NEW."bucket_id", NEW."name");
+    NEW.level := "storage"."get_level"(NEW."name");
+
+    RETURN NEW;
+END;
+$func$ LANGUAGE plpgsql VOLATILE;
+
+CREATE OR REPLACE FUNCTION "storage"."delete_prefix_hierarchy_trigger"()
+    RETURNS trigger
+AS $func$
+DECLARE
+    prefix text;
+BEGIN
+    prefix := "storage"."get_prefix"(OLD."name");
+
+    IF coalesce(prefix, '') != '' THEN
+        PERFORM "storage"."delete_prefix"(OLD."bucket_id", prefix);
+    END IF;
+
+    RETURN OLD;
+END;
+$func$ LANGUAGE plpgsql VOLATILE;
+
+-- "storage"."prefixes"
+CREATE OR REPLACE TRIGGER "prefixes_delete_hierarchy"
+    AFTER DELETE ON "storage"."prefixes"
+    FOR EACH ROW
+EXECUTE FUNCTION "storage"."delete_prefix_hierarchy_trigger"();
+
+-- "storage"."objects"
+CREATE OR REPLACE TRIGGER "objects_insert_create_prefix"
+    BEFORE INSERT ON "storage"."objects"
+    FOR EACH ROW
+EXECUTE FUNCTION "storage"."objects_insert_prefix_trigger"();
+
+CREATE OR REPLACE TRIGGER "objects_update_create_prefix"
+    BEFORE UPDATE ON "storage"."objects"
+    FOR EACH ROW
+    WHEN (NEW.name != OLD.name)
+EXECUTE FUNCTION "storage"."objects_insert_prefix_trigger"();
+
+CREATE OR REPLACE TRIGGER "objects_delete_delete_prefix"
+    AFTER DELETE ON "storage"."objects"
+    FOR EACH ROW
+EXECUTE FUNCTION "storage"."delete_prefix_hierarchy_trigger"();
+
+-- Permissions
+DO $$
+    DECLARE
+        anon_role text = COALESCE(current_setting('storage.anon_role', true), 'anon');
+        authenticated_role text = COALESCE(current_setting('storage.authenticated_role', true), 'authenticated');
+        service_role text = COALESCE(current_setting('storage.service_role', true), 'service_role');
+    BEGIN
+        EXECUTE 'GRANT ALL ON TABLE storage.prefixes TO ' || service_role || ',' || authenticated_role || ', ' || anon_role;
+END$$;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------- FOR STORAGE
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+-------------------storage -- https://github.com/supabase/storage/blob/master/migrations/tenant/0029-create-prefixes.sql
+
+
+-- -- postgres-migrations disable-transaction
+-- -- Backfill prefixes table records
+-- -- We run this with 50k batch size to avoid long running transaction
+-- DO $$
+--     DECLARE
+--         batch_size INTEGER := 10000;
+--         total_scanned INTEGER := 0;
+--         row_returned INTEGER := 0;
+--         last_name TEXT COLLATE "C" := NULL;
+--         last_bucket_id TEXT COLLATE "C" := NULL;
+--         delay INTEGER := 1;
+--         start_time TIMESTAMPTZ;
+--         end_time TIMESTAMPTZ;
+--         exec_duration INTERVAL;
+--     BEGIN
+--         LOOP
+--             start_time := clock_timestamp();  -- Start time of batch
+
+--             -- Fetch a batch of objects ordered by name COLLATE "C"
+--             WITH batch as (
+--                 SELECT id, bucket_id, name, owner
+--                 FROM storage.objects
+--                 WHERE (last_name IS NULL OR ((name COLLATE "C", bucket_id) > (last_name, last_bucket_id)))
+--                 ORDER BY name COLLATE "C", bucket_id
+--                 LIMIT batch_size
+--             ),
+--             batch_count as (
+--                 SELECT COUNT(*) as count FROM batch
+--             ),
+--             cursor as (
+--                  SELECT name as last_name, bucket_id as last_bucket FROM batch b
+--                  ORDER BY name COLLATE "C" DESC, bucket_id DESC LIMIT 1
+--             ),
+--             all_prefixes as (
+--                 SELECT UNNEST(storage.get_prefixes(name)) as prefix, bucket_id
+--                 FROM batch
+--             ),
+--             insert_prefixes as (
+--                 INSERT INTO storage.prefixes (bucket_id, name)
+--                 SELECT bucket_id, prefix FROM all_prefixes
+--                 WHERE coalesce(prefix, '') != ''
+--                 ON CONFLICT DO NOTHING
+--             )
+--             SELECT count, cursor.last_name, cursor.last_bucket FROM cursor, batch_count INTO row_returned, last_name, last_bucket_id;
+
+--             end_time := clock_timestamp();  -- End time after batch processing
+--             exec_duration := end_time - start_time;  -- Calculate elapsed time
+
+--             RAISE NOTICE 'Object Row returned: %', row_returned;
+--             RAISE NOTICE 'Last Object: %', last_name;
+--             RAISE NOTICE 'Execution time for this batch: %', exec_duration;
+--             RAISE NOTICE 'Delay: %', delay;
+--             RAISE NOTICE 'Batch size: %', batch_size;
+--             RAISE NOTICE '-------------------------------------------------';
+
+--             total_scanned := total_scanned + row_returned;
+
+--             IF row_returned IS NULL OR row_returned < batch_size THEN
+--                 RAISE NOTICE 'Total Object scanned: %', coalesce(total_scanned, 0);
+--                 COMMIT;
+--                 EXIT;
+--             ELSE
+--                 COMMIT;
+--                 PERFORM pg_sleep(delay);
+--                 -- Increase delay by 1 second for each iteration until 30
+--                 -- then reset it back to 1
+--                 SELECT CASE WHEN delay >= 10 THEN 1 ELSE delay + 1 END INTO delay;
+
+--                 -- Update the batch size:
+--                 -- If execution time > 3 seconds, reset batch_size to 20k.
+--                 -- If the batch size is already 20k, decrease it by 1k until 5k.
+--                 -- Otherwise, increase batch_size by 5000 up to a maximum of 50k.
+--                 IF exec_duration > interval '3 seconds' THEN
+--                     IF batch_size <= 20000 THEN
+--                         batch_size := GREATEST(batch_size - 1000, 5000);
+--                     ELSE
+--                         batch_size := 20000;
+--                     END IF;
+--                 ELSE
+--                     batch_size := LEAST(batch_size + 5000, 50000);
+--                 END IF;
+--             END IF;
+--     END LOOP;
+-- END;
+-- $$;
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------- FOR STORAGE
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+-------------------storage -- https://github.com/supabase/storage/blob/6ba23e408dc700e4e2ca5527eed1cf8c60ced218/migrations/tenant/0038-iceberg-catalog-flag-on-buckets.sql#L18
+
+DO $$
+    DECLARE
+        is_multitenant bool = COALESCE(current_setting('storage.multitenant', true), 'false')::boolean;
+        anon_role text = COALESCE(current_setting('storage.anon_role', true), 'anon');
+        authenticated_role text = COALESCE(current_setting('storage.authenticated_role', true), 'authenticated');
+        service_role text = COALESCE(current_setting('storage.service_role', true), 'service_role');
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'buckettype') THEN
+            create type storage.BucketType as enum (
+                'STANDARD',
+                'ANALYTICS'
+            );
+        END IF;
+
+        ALTER TABLE storage.buckets DROP COLUMN IF EXISTS iceberg_catalog;
+        ALTER TABLE storage.buckets ADD COLUMN IF NOT EXISTS type storage.BucketType NOT NULL default 'STANDARD';
+
+        CREATE TABLE IF NOT EXISTS storage.buckets_analytics (
+            id text not null primary key,
+            type storage.BucketType NOT NULL default 'ANALYTICS',
+            format text NOT NULL default 'ICEBERG',
+            created_at timestamptz NOT NULL default now(),
+            updated_at timestamptz NOT NULL default now()
+        );
+
+        ALTER TABLE storage.buckets_analytics ADD COLUMN IF NOT EXISTS type storage.BucketType NOT NULL default 'ANALYTICS';
+        ALTER TABLE storage.buckets_analytics ENABLE ROW LEVEL SECURITY;
+
+        EXECUTE 'GRANT ALL ON TABLE storage.buckets_analytics TO ' || service_role || ', ' || authenticated_role || ', ' || anon_role;
+
+        IF is_multitenant THEN
+            RETURN;
+        END IF;
+
+        CREATE TABLE IF NOT EXISTS storage.iceberg_namespaces (
+            id uuid primary key default gen_random_uuid(),
+            bucket_id text NOT NULL references storage.buckets_analytics(id) ON DELETE CASCADE,
+            name text COLLATE "C" NOT NULL,
+            created_at timestamptz NOT NULL default now(),
+            updated_at timestamptz NOT NULL default now()
+        );
+
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_iceberg_namespaces_bucket_id ON storage.iceberg_namespaces (bucket_id, name);
+
+        CREATE TABLE IF NOT EXISTS storage.iceberg_tables (
+          id uuid primary key default gen_random_uuid(),
+          namespace_id uuid NOT NULL references storage.iceberg_namespaces(id) ON DELETE CASCADE,
+          bucket_id text NOT NULL references storage.buckets_analytics(id) ON DELETE CASCADE,
+          name text COLLATE "C" NOT NULL,
+          location text not null,
+          created_at timestamptz NOT NULL default now(),
+          updated_at timestamptz NOT NULL default now()
+        );
+
+        CREATE UNIQUE INDEX idx_iceberg_tables_namespace_id ON storage.iceberg_tables (namespace_id, name);
+
+        ALTER TABLE storage.iceberg_namespaces ENABLE ROW LEVEL SECURITY;
+        ALTER TABLE storage.iceberg_tables ENABLE ROW LEVEL SECURITY;
+
+        EXECUTE 'revoke all on storage.iceberg_namespaces from ' || anon_role || ', ' || authenticated_role;
+        EXECUTE 'GRANT ALL ON TABLE storage.iceberg_namespaces TO ' || service_role;
+        EXECUTE 'GRANT SELECT ON TABLE storage.iceberg_namespaces TO ' || authenticated_role || ', ' || anon_role;
+
+        EXECUTE 'revoke all on storage.iceberg_tables from ' || anon_role || ', ' || authenticated_role;
+        EXECUTE 'GRANT ALL ON TABLE storage.iceberg_tables TO ' || service_role;
+        EXECUTE 'GRANT SELECT ON TABLE storage.iceberg_tables TO ' || authenticated_role || ', ' || anon_role;
+END$$;

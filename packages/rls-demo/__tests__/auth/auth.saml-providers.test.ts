@@ -19,8 +19,8 @@ beforeAll(async () => {
   expect(authSchemaExists[0].exists).toBe(true);
   
   // grant access to auth schema for testing
-  await pg.any(
-    `GRANT USAGE ON SCHEMA auth TO public;
+    await pg.any(
+      `GRANT USAGE ON SCHEMA auth TO public;
      GRANT SELECT ON ALL TABLES IN SCHEMA auth TO service_role;
      GRANT SELECT ON ALL TABLES IN SCHEMA auth TO authenticated;
      GRANT SELECT ON ALL TABLES IN SCHEMA auth TO anon;
@@ -73,13 +73,13 @@ describe('tutorial: auth saml_providers table access', () => {
     db.setContext({ role: 'service_role' });
     
     // service_role should be able to query saml_providers
-    const providers = await db.any(
+      const providers = await db.any(
       `SELECT id, sso_provider_id, entity_id, metadata_xml, metadata_url, attribute_mapping, created_at, updated_at 
-       FROM auth.saml_providers 
-       LIMIT 10`
-    );
-    
-    expect(Array.isArray(providers)).toBe(true);
+         FROM auth.saml_providers 
+         LIMIT 10`
+      );
+      
+      expect(Array.isArray(providers)).toBe(true);
   });
 
   it('should verify table has foreign key to sso_providers', async () => {

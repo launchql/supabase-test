@@ -17,8 +17,8 @@ beforeAll(async () => {
   expect(authSchemaExists[0].exists).toBe(true);
   
   // grants for reads
-  await pg.any(
-    `GRANT USAGE ON SCHEMA auth TO public;
+    await pg.any(
+      `GRANT USAGE ON SCHEMA auth TO public;
      GRANT SELECT ON ALL TABLES IN SCHEMA auth TO service_role;
      GRANT SELECT ON ALL TABLES IN SCHEMA auth TO authenticated;
      GRANT SELECT ON ALL TABLES IN SCHEMA auth TO anon;
@@ -71,13 +71,13 @@ describe('tutorial: auth oauth_clients table access', () => {
     db.setContext({ role: 'service_role' });
     
     // service_role should be able to query oauth_clients
-    const clients = await db.any(
+      const clients = await db.any(
       `SELECT id, client_id, client_secret_hash, client_name, created_at, updated_at 
-       FROM auth.oauth_clients 
-       LIMIT 10`
-    );
-    
-    expect(Array.isArray(clients)).toBe(true);
+         FROM auth.oauth_clients 
+         LIMIT 10`
+      );
+      
+      expect(Array.isArray(clients)).toBe(true);
   });
 
   it('should verify table has unique constraint on client_id', async () => {
