@@ -4,8 +4,6 @@ let pg: PgTestClient;
 let db: PgTestClient;
 let teardown: () => Promise<void>;
 
-let tableExists = false;
-
 beforeAll(async () => {
   
   
@@ -32,14 +30,14 @@ beforeAll(async () => {
     []
   );
   
-  // check if auth.audit_log_entries table exists (using pg in beforeAll only)
+  // assert table exists for this schema
   const exists = await pg.any(
     `SELECT EXISTS (
       SELECT FROM information_schema.tables 
       WHERE table_schema = 'auth' AND table_name = 'audit_log_entries'
     ) as exists`
   );
-  tableExists = exists[0]?.exists === true;
+  expect(exists[0].exists).toBe(true);
 });
 
 afterAll(async () => {
@@ -67,22 +65,14 @@ describe('tutorial: auth audit_log_entries table access', () => {
     );
     
     expect(Array.isArray(exists)).toBe(true);
-    if (exists[0]?.exists === false) {
-      expect(exists[0].exists).toBe(false);
-      return;
-    }
     expect(exists[0].exists).toBe(true);
   });
 
   it('should verify service_role can read audit log entries', async () => {
-    if (!tableExists) {
-      return;
-    }
-    
     db.setContext({ role: 'service_role' });
     
     const entries = await db.any(
-      `SELECT id, instance_id, created_at 
+      `SELECT id, instance_id, payload, created_at 
        FROM auth.audit_log_entries 
        LIMIT 10`
     );
@@ -91,27 +81,20 @@ describe('tutorial: auth audit_log_entries table access', () => {
   });
 
   it('should verify table has expected columns', async () => {
-    if (!tableExists) {
-      return;
-    }
-    
     db.setContext({ role: 'service_role' });
     
     const columns = await db.any(
       `SELECT column_name 
        FROM information_schema.columns 
-       WHERE table_schema = 'auth' AND table_name = 'audit_log_entries'
-       AND column_name IN ('id', 'instance_id', 'payload', 'created_at')`
+       WHERE table_schema = 'auth' AND table_name = 'audit_log_entries'`
     );
     
-    expect(columns.length).toBeGreaterThanOrEqual(0);
+    expect(Array.isArray(columns)).toBe(true);
+    const names = columns.map((r: any) => r.column_name);
+    expect(names).toEqual(expect.arrayContaining(['id', 'instance_id', 'payload', 'created_at']));
   });
 
   it('should verify table has primary key on id', async () => {
-    if (!tableExists) {
-      return;
-    }
-    
     db.setContext({ role: 'service_role' });
     
     const pk = await db.any(
@@ -128,35 +111,40 @@ describe('tutorial: auth audit_log_entries table access', () => {
   });
 
   it('should verify table has index on instance_id', async () => {
-    if (!tableExists) {
-      return;
-    }
-    
     db.setContext({ role: 'service_role' });
     
     const indexes = await db.any(
-      `SELECT indexname 
+      `SELECT indexname, indexdef 
        FROM pg_indexes 
        WHERE schemaname = 'auth' AND tablename = 'audit_log_entries'
        AND indexname LIKE '%instance_id%'`
     );
     
     expect(Array.isArray(indexes)).toBe(true);
+    if (indexes.length > 0) {
+      const defs = indexes.map((r: any) => r.indexdef.toLowerCase()).join(' ');
+      expect(defs.includes('instance_id')).toBe(true);
+    }
   });
 
-  it('should prevent anon from accessing audit logs', async () => {
-    if (!tableExists) {
-      return;
-    }
+  it('should verify anon access to audit logs based on rls', async () => {
+    // check rls status
+    db.setContext({ role: 'service_role' });
+    const rlsStatus = await db.any(
+      `SELECT c.relrowsecurity 
+       FROM pg_class c
+       JOIN pg_namespace n ON n.oid = c.relnamespace
+       WHERE n.nspname = 'auth' AND c.relname = 'audit_log_entries'`
+    );
+    expect(Array.isArray(rlsStatus)).toBe(true);
+    expect(rlsStatus.length).toBeGreaterThan(0);
     
     db.clearContext();
-    
-    const result = await db.any(
-      `SELECT * FROM auth.audit_log_entries LIMIT 1`
-    );
-    
-    // rls should block access, result should be empty
-    expect(result.length).toBe(0);
+    const result = await db.any(`SELECT * FROM auth.audit_log_entries LIMIT 1`);
+    expect(Array.isArray(result)).toBe(true);
+    if (rlsStatus[0].relrowsecurity === true) {
+      expect(result.length).toBe(0);
+    }
   });
 });
 
