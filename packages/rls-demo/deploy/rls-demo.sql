@@ -1,53 +1,6 @@
 -- Deploy: rls-demo to pg
 -- made with <3 @ launchql.com
 
--- Create auth schema for RLS testing
-CREATE SCHEMA IF NOT EXISTS auth;
-
--- Create uid() function for RLS policies
-CREATE OR REPLACE FUNCTION auth.uid()
-RETURNS UUID
-LANGUAGE SQL
-STABLE
-AS $$
-  SELECT COALESCE(
-    current_setting('jwt.claims.user_id', true)::uuid,
-    current_setting('jwt.claims.sub', true)::uuid
-  );
-$$;
-
--- Create role() function for RLS policies
-CREATE OR REPLACE FUNCTION auth.role()
-RETURNS TEXT
-LANGUAGE SQL
-STABLE
-AS $$
-  SELECT COALESCE(
-    current_setting('role', true),
-    'anon'
-  );
-$$;
-
--- Grant permissions on auth schema and functions to public
-GRANT USAGE ON SCHEMA auth TO public;
-GRANT EXECUTE ON FUNCTION auth.uid() TO public;
-GRANT EXECUTE ON FUNCTION auth.role() TO public;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 -- Create rls_test schema
 CREATE SCHEMA IF NOT EXISTS rls_test;
@@ -113,6 +66,9 @@ CREATE POLICY "Users can delete own products" ON rls_test.products
 -- Grant permissions to anon users
 GRANT USAGE ON SCHEMA rls_test TO anon;
 GRANT ALL ON rls_test.users TO anon;
+
+-- dev (TODO: issue theres a chance we might want all anon to be not granted, but were protecting records)
+GRANT ALL ON rls_test.products TO anon;
 
 -- Grant permissions to authenticated users
 GRANT USAGE ON SCHEMA rls_test TO authenticated;
