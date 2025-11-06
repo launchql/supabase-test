@@ -4,7 +4,6 @@ let pg: PgTestClient;
 let db: PgTestClient;
 let teardown: () => Promise<void>;
 let testUserId: string | null = null;
-let tableExists = false;
 
 beforeAll(async () => {
   ({ pg, db, teardown } = await getConnections());
@@ -30,14 +29,7 @@ beforeAll(async () => {
     []
   );
   
-  // check if table exists (optional feature)
-  const exists = await pg.any(
-    `SELECT EXISTS (
-      SELECT FROM information_schema.tables 
-      WHERE table_schema = 'storage' AND table_name = 'buckets_analytics'
-    ) as exists`
-  );
-  tableExists = exists[0]?.exists === true;
+  // tests will assert table existence explicitly
 
   const u = await pg.one(
     `INSERT INTO auth.users (id, email) 
@@ -78,9 +70,6 @@ describe('tutorial: storage buckets_analytics table access', () => {
   });
 
   it('should verify service_role can query buckets_analytics', async () => {
-    if (!tableExists) {
-      return;
-    }
     db.setContext({ role: 'service_role' });
     
     // service_role should be able to query buckets_analytics
@@ -94,10 +83,6 @@ describe('tutorial: storage buckets_analytics table access', () => {
   });
 
   it('should verify table structure via information_schema', async () => {
-    if (!tableExists) {
-      return;
-    }
-    
     db.setContext({ role: 'service_role' });
     
     // query table column structure

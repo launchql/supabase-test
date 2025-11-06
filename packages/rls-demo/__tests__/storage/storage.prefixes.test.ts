@@ -4,7 +4,6 @@ let pg: PgTestClient;
 let db: PgTestClient;
 let teardown: () => Promise<void>;
 let testUserId: string | null = null;
-let tableExists = false;
 
 beforeAll(async () => {
   ({ pg, db, teardown } = await getConnections());
@@ -30,25 +29,14 @@ beforeAll(async () => {
     []
   );
   
-  // check if storage.prefixes exists (optional feature)
-  const exists = await pg.any(
-    `SELECT EXISTS (
-      SELECT FROM information_schema.tables 
-      WHERE table_schema = 'storage' AND table_name = 'prefixes'
-    ) as exists`
+  // ensure test user exists for authenticated context
+  const u = await pg.one(
+    `INSERT INTO auth.users (id, email) 
+     VALUES (gen_random_uuid(), $1)
+     RETURNING id`,
+    ['storage-prefix-test@example.com']
   );
-  tableExists = exists[0]?.exists === true;
-
-  if (tableExists) {
-    // ensure test user exists for authenticated context
-    const u = await pg.one(
-      `INSERT INTO auth.users (id, email) 
-       VALUES (gen_random_uuid(), $1)
-       RETURNING id`,
-      ['storage-prefix-test@example.com']
-    );
-    testUserId = u.id;
-  }
+  testUserId = u.id;
 });
 
 afterAll(async () => {
@@ -77,13 +65,10 @@ describe('tutorial: storage prefixes table access', () => {
     );
     
     expect(Array.isArray(exists)).toBe(true);
-    expect(typeof exists[0].exists).toBe('boolean');
+    expect(exists[0].exists).toBe(true);
   });
 
   it('should verify service_role can query prefixes', async () => {
-    if (!tableExists) {
-      return;
-    }
     db.setContext({ role: 'service_role' });
     
     // service_role should be able to query prefixes
@@ -97,9 +82,6 @@ describe('tutorial: storage prefixes table access', () => {
   });
 
   it('should verify table has proper structure', async () => {
-    if (!tableExists) {
-      return;
-    }
     db.setContext({ role: 'service_role' });
     
     // query table column structure
@@ -114,9 +96,6 @@ describe('tutorial: storage prefixes table access', () => {
   });
 
   it('should verify authenticated access to prefixes based on rls', async () => {
-    if (!tableExists) {
-      return;
-    }
     // rls status
     db.setContext({ role: 'service_role' });
     const rlsStatus = await db.any(
@@ -140,9 +119,6 @@ describe('tutorial: storage prefixes table access', () => {
   });
 
   it('should verify anon access to prefixes based on rls', async () => {
-    if (!tableExists) {
-      return;
-    }
     db.setContext({ role: 'service_role' });
     const rlsStatus = await db.any(
       `SELECT c.relrowsecurity 

@@ -4,7 +4,6 @@ let pg: PgTestClient;
 let db: PgTestClient;
 let teardown: () => Promise<void>;
 let testUserId: string | null = null;
-let tableExists = false;
 
 beforeAll(async () => {
   ({ pg, db, teardown } = await getConnections());
@@ -30,23 +29,13 @@ beforeAll(async () => {
     []
   );
   
-  // check if table exists (optional feature)
-  const exists = await pg.any(
-    `SELECT EXISTS (
-      SELECT FROM information_schema.tables 
-      WHERE table_schema = 'storage' AND table_name = 'iceberg_namespaces'
-    ) as exists`
+  const u = await pg.one(
+    `INSERT INTO auth.users (id, email) 
+     VALUES (gen_random_uuid(), $1) 
+     RETURNING id`,
+    ['storage-namespace-test@example.com']
   );
-  tableExists = exists[0]?.exists === true;
-  if (tableExists) {
-    const u = await pg.one(
-      `INSERT INTO auth.users (id, email) 
-       VALUES (gen_random_uuid(), $1) 
-       RETURNING id`,
-      ['storage-namespace-test@example.com']
-    );
-    testUserId = u.id;
-  }
+  testUserId = u.id;
 });
 
 afterAll(async () => {
@@ -75,18 +64,15 @@ describe('tutorial: storage iceberg_namespaces table access', () => {
     );
     
     expect(Array.isArray(exists)).toBe(true);
-    expect(typeof exists[0].exists).toBe('boolean');
+    expect(exists[0].exists).toBe(true);
   });
 
   it('should verify service_role can query iceberg_namespaces', async () => {
-    if (!tableExists) {
-      return;
-    }
     db.setContext({ role: 'service_role' });
     
     // service_role should be able to query iceberg_namespaces
     const namespaces = await db.any(
-      `SELECT id, name, created_at 
+      `SELECT id, bucket_id, name, created_at, updated_at 
        FROM storage.iceberg_namespaces 
        LIMIT 10`
     );
@@ -95,9 +81,6 @@ describe('tutorial: storage iceberg_namespaces table access', () => {
   });
 
   it('should verify table has proper structure', async () => {
-    if (!tableExists) {
-      return;
-    }
     db.setContext({ role: 'service_role' });
     
     // query table column structure
@@ -112,9 +95,6 @@ describe('tutorial: storage iceberg_namespaces table access', () => {
   });
 
   it('should verify authenticated access to iceberg_namespaces based on rls', async () => {
-    if (!tableExists) {
-      return;
-    }
     db.setContext({ role: 'service_role' });
     const rlsStatus = await db.any(
       `SELECT c.relrowsecurity 
@@ -133,9 +113,6 @@ describe('tutorial: storage iceberg_namespaces table access', () => {
   });
 
   it('should verify anon access to iceberg_namespaces based on rls', async () => {
-    if (!tableExists) {
-      return;
-    }
     db.setContext({ role: 'service_role' });
     const rlsStatus = await db.any(
       `SELECT c.relrowsecurity 
