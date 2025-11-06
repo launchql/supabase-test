@@ -21,8 +21,8 @@ beforeAll(async () => {
   expect(vaultSchemaExists[0].exists).toBe(true);
   
   // grant access to vault schema for testing
-  await pg.any(
-    `GRANT USAGE ON SCHEMA vault TO public;
+    await pg.any(
+      `GRANT USAGE ON SCHEMA vault TO public;
      GRANT SELECT ON ALL TABLES IN SCHEMA vault TO service_role;
      GRANT SELECT ON ALL TABLES IN SCHEMA vault TO anon;
      GRANT SELECT ON ALL TABLES IN SCHEMA vault TO authenticated;
@@ -69,13 +69,13 @@ describe('tutorial: vault secrets table access', () => {
 
   it('should verify service_role can query secrets structure', async () => {
     db.setContext({ role: 'service_role' });
-    const columns = await db.any(
-      `SELECT column_name, data_type 
-       FROM information_schema.columns 
-       WHERE table_schema = 'vault' AND table_name = 'secrets'
-       ORDER BY ordinal_position`
-    );
-    expect(Array.isArray(columns)).toBe(true);
+      const columns = await db.any(
+        `SELECT column_name, data_type 
+         FROM information_schema.columns 
+         WHERE table_schema = 'vault' AND table_name = 'secrets'
+         ORDER BY ordinal_position`
+      );
+      expect(Array.isArray(columns)).toBe(true);
     const names = columns.map((r: any) => r.column_name);
     expect(names).toEqual(expect.arrayContaining([
       'id', 'name', 'description', 'secret', 'key_id', 'nonce', 'created_at', 'updated_at'
@@ -99,15 +99,15 @@ describe('tutorial: vault secrets table access', () => {
 
   it('should verify relrowsecurity status on secrets', async () => {
     db.setContext({ role: 'service_role' });
-    const rlsStatus = await db.any(
-      `SELECT c.relrowsecurity 
-       FROM pg_class c
-       JOIN pg_namespace n ON n.oid = c.relnamespace
-       WHERE n.nspname = 'vault' AND c.relname = 'secrets'`
-    );
+      const rlsStatus = await db.any(
+        `SELECT c.relrowsecurity 
+         FROM pg_class c
+         JOIN pg_namespace n ON n.oid = c.relnamespace
+         WHERE n.nspname = 'vault' AND c.relname = 'secrets'`
+      );
     expect(Array.isArray(rlsStatus)).toBe(true);
     expect(rlsStatus.length).toBeGreaterThan(0);
-    expect(typeof rlsStatus[0].relrowsecurity).toBe('boolean');
+        expect(typeof rlsStatus[0].relrowsecurity).toBe('boolean');
   });
 
   it('should verify anon access to secrets based on rls', async () => {
