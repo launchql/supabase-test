@@ -13,8 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         package:
-          - supabase
           - rls-demo
+          - supabase
 
     env:
       PGHOST: 127.0.0.1
