@@ -1,23 +1,23 @@
 {
-  "name": "undefined",
+  "name": "supabase-test",
   "version": "0.0.1",
-  "author": "jovonni <jovonnipharr@gmail.com>",
-  "description": "undefined",
+  "author": "Interweb <developers@interweb.co>",
+  "description": "supabase-test",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
-  "homepage": "https://github.com/undefined/undefined",
-  "license": "MIT",
+  "homepage": "https://github.com/launchql/supabase-test",
+  "license": "SEE LICENSE IN LICENSE",
   "publishConfig": {
-    "access": "undefined",
+    "access": "public",
     "directory": "dist"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/undefined/undefined"
+    "url": "https://github.com/launchql/supabase-test"
   },
   "bugs": {
-    "url": "https://github.com/undefined/undefined/issues"
+    "url": "https://github.com/launchql/supabase-test/issues"
   },
   "scripts": {
     "copy": "copyfiles -f ../../LICENSE README.md package.json dist",
