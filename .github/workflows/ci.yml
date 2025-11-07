@@ -19,7 +19,7 @@ jobs:
     env:
       PGHOST: 127.0.0.1
       PGPORT: 54322
-      PGUSER: postgres
+      PGUSER: supabase_admin
       PGPASSWORD: postgres
       DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1:54322/postgres"
 
