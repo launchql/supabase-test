@@ -51,8 +51,8 @@ importers:
         specifier: ^8.2.3
         version: 8.2.3(@types/node@22.17.1)(encoding@0.1.13)
       pgsql-test:
-        specifier: ^2.11.5
-        version: 2.11.5(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.10.1)
+        specifier: ^2.11.10
+        version: 2.11.10(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.10.1)
       prettier:
         specifier: ^3.0.2
         version: 3.6.2
@@ -620,13 +620,16 @@ packages:
     peerDependencies:
       '@pgsql/types': ^17.6.1
 
-  '@launchql/core@2.11.5':
-    resolution: {integrity: sha512-EgHVHRGo7NwXo9o5UJ6XbDr0OFIaCQ08E8P5213d2bp6gThcxIfYJrDAc2xgq9RB/yw76Jvygs/xCdso6ujLlA==}
+  '@launchql/core@2.11.7':
+    resolution: {integrity: sha512-2BXrl2IEBmSXaQDd72YSCSMcT5lUypCIP6Xqrdpmkh7jRj8FAmk7jmIMiXzNjS8YIQHHId516k9Me04dD7s80g==}
     peerDependencies:
       '@pgsql/types': ^17.6.1
 
   '@launchql/env@2.4.1':
     resolution: {integrity: sha512-ZnoCtrb49jvoj5vdDVFDdFhjwlcl3M2LjZg8xJHTgts4c5RhtXjz5hKZUb9usZtqbMdZxbHK9b2c9kWER4+doQ==}
+
+  '@launchql/env@2.4.3':
+    resolution: {integrity: sha512-vdUswZ3YAvKE/XtVHUiW8g4f1jl6wOgL1Q9P5s8k7IzXDu0CfmlTNDU9GZ1brbL3dBe2TbzzfJh8o5nNO7wW6g==}
 
   '@launchql/explorer@2.5.2':
     resolution: {integrity: sha512-h4U1g0YsVfVObTXZf4NpedkmsMVxqVe70QT3m3cERm6UMv0VPnaOagKfHLJJ1w25W3Kxm29hZkTmZAfxurEIHA==}
@@ -644,14 +647,23 @@ packages:
   '@launchql/server-utils@2.4.1':
     resolution: {integrity: sha512-1TkNj4RBG8BykduQmtHb2hQmvz1TTHb9MPWOYA6Vu+SV2B+dZUtxTuL8P8WD9eaRVxXIuhI8XumT3RlxtWbOPA==}
 
+  '@launchql/server-utils@2.4.3':
+    resolution: {integrity: sha512-ggMRmca6wqf/z1B77D6RdIYu+zFEdMMi238EPeHMOx2vhj2KrhfOk+WJExWkz3Eg9kCcyR6PYI6jCY38DAnhWw==}
+
   '@launchql/server@2.5.2':
     resolution: {integrity: sha512-4ChzZuWFK4WgWAr6evIIBH4xhu8toJ1j7218JJlpZQQU/UPdzk6UnuY5gyksmPXYSaU3fgmDgy9rfjF44s9bwQ==}
 
   '@launchql/templatizer@2.3.0':
     resolution: {integrity: sha512-Jrg3U5rupg6JJvoxGHBcjzL5FVdKbA+ggw92x36wjuM5PsCYQ6X+f2qXLXwGEGiVMaVzTA3hWlSZH7SIfGj2TA==}
 
+  '@launchql/templatizer@2.3.1':
+    resolution: {integrity: sha512-mgti0JmC/OM/4pj6q09h0gfvMQAo/5f9FKYW5KE8VfAc8kSXdUR20eSlZhL0byg+mC9HAQaU5JNoM7OZwzDxTQ==}
+
   '@launchql/types@2.6.0':
     resolution: {integrity: sha512-62KMpcQdCET3fClKRkIzt5l9QMr1gzw11HWJ3d9h6VyeckaAywo19dtKsmvmhl0yHNVRNhMkEnDrom7YDH0F8w==}
+
+  '@launchql/types@2.6.2':
+    resolution: {integrity: sha512-3T9A8Zh5pLvFyxFLRqdQgJdYWDeiiLvjO7nNwuqKzME7qOOJd31zF+5QbqQNJQyer397E8dAYpQhKEXWH0HjmA==}
 
   '@launchql/upload-names@2.2.0':
     resolution: {integrity: sha512-Nk2vFFNRW7FibNSNjtdQD2BAqybnB1L3QPuJnzwuNdAoxDZvu1p8LthFT4qDwjK8CtO2gxVIerkq1RETlWnLbw==}
@@ -3149,6 +3161,10 @@ packages:
     resolution: {integrity: sha512-QIXZUBJUx+2zHUdQujWejBkcD9+cs94tLn0+YL8UrCh+D5sCXZ4c7LaEH48pNwRY3MLDgqUFyhlCyjJPf1WP0A==}
     engines: {node: 20 || >=22}
 
+  lru-cache@11.2.2:
+    resolution: {integrity: sha512-F9ODfyqML2coTIsQpSkRHnLSZMtkU8Q+mSfcaIyKwy58u+8k5nvAYeiNhsyMARvzNcXJ9QfWVrcPsC9e9rAxtg==}
+    engines: {node: 20 || >=22}
+
   lru-cache@4.1.5:
     resolution: {integrity: sha512-sWZlbEP2OsHNkXrMl5GYk/jKk70MBng6UU4YI/qGDYbgf6YbP4EvmqISbXCoJiRKs+1bSpFHVgQxvJ17F2li5g==}
 
@@ -3254,8 +3270,8 @@ packages:
     resolution: {integrity: sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==}
     engines: {node: '>=4'}
 
-  minimatch@10.0.3:
-    resolution: {integrity: sha512-IPZ167aShDZZUMdRk66cyQAW3qr0WzbHkPdMYa8bzZhlHhO3jALbKdxcaak7W9FfT2rZNpQuUu4Od7ILEpXSaw==}
+  minimatch@10.1.1:
+    resolution: {integrity: sha512-enIvLvRAFZYXJzkCYG5RKmPfrFArdLv+R+lbQ53BmIMLIry74bjKzX6iHAm8WYamJkhSSEabrWN5D97XnKObjQ==}
     engines: {node: 20 || >=22}
 
   minimatch@3.0.5:
@@ -3664,8 +3680,8 @@ packages:
     resolution: {integrity: sha512-Xa4Nw17FS9ApQFJ9umLiJS4orGjm7ZzwUrwamcGQuHSzDyth9boKDaycYdDcZDuqYATXw4HFXgaqWTctW/v1HA==}
     engines: {node: '>=16 || 14 >=14.18'}
 
-  path-scurry@2.0.0:
-    resolution: {integrity: sha512-ypGJsmGtdXUOeM5u93TyeIEfEhM6s+ljAhrk5vAvSx8uyY/02OvrZnA0YNGUrPXfpJMgI1ODd3nwz8Npx4O4cg==}
+  path-scurry@2.0.1:
+    resolution: {integrity: sha512-oWyT4gICAu+kaA7QWk/jvCHWarMKNs6pXOGWKDTr7cw4IGcUbW+PeTfbaQiLGheFRpjo6O9J0PmyMfQPjH71oA==}
     engines: {node: 20 || >=22}
 
   path-to-regexp@8.2.0:
@@ -3685,6 +3701,9 @@ packages:
 
   pg-cache@1.3.2:
     resolution: {integrity: sha512-zXrYHh1i1mHZrmHEYLFT6+ItcmoBvj/TCxrPiZBmLw9xtVCkW/eTH21+xOFiL1kPYkMeQhiDpm9031UNLRYoDw==}
+
+  pg-cache@1.3.4:
+    resolution: {integrity: sha512-ifN+Ga6cHD3xCC/5Pcdua5ZpQSDX7PcF72fQpJwBZ5BoQ2pGYGlcPhTnPxmIcjEYQiKohlTw79eCPgKj7CKU6Q==}
 
   pg-cloudflare@1.2.7:
     resolution: {integrity: sha512-YgCtzMH0ptvZJslLM1ffsY4EuGaU0cx4XSdXLRFae8bPP4dS5xL1tNB3k2o/N64cHJpwU7dxKli/nZ2lUa5fLg==}
@@ -3751,8 +3770,8 @@ packages:
   pgsql-parser@17.8.2:
     resolution: {integrity: sha512-/uHZL7mq3Bj23v/nDShb8gN8LwUKdejFii6IFBxRYRXxWlRrbsdky1KtevIxiVGasWZfI+E5t1//Wq+D3cVmAg==}
 
-  pgsql-test@2.11.5:
-    resolution: {integrity: sha512-l5WqgN48bKpZ7nlDnSXtGHg38VKzAwS/nqZyFQSavkHipc8gBrkZjnI2fAsuprwsakYwvUGzO/y6GRsgB3Yk4w==}
+  pgsql-test@2.11.10:
+    resolution: {integrity: sha512-nAuIBo/wZ03on4TBzrBl+AS5U5kqgA5e48WWvtsQrNiEYVqcOyjxTnbWRdMTVYrliIfXPonnCsJ3JQfI1BbaaQ==}
 
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
@@ -4035,6 +4054,11 @@ packages:
 
   rimraf@6.0.1:
     resolution: {integrity: sha512-9dkvaxAsk/xNXSJzMgFqqMCuFgt2+KsOFek3TMLfo8NCPfWpBmqwyNn5Y+NX56QUYfCtsyhF3ayiboEoUmJk/A==}
+    engines: {node: 20 || >=22}
+    hasBin: true
+
+  rimraf@6.1.0:
+    resolution: {integrity: sha512-DxdlA1bdNzkZK7JiNWH+BAx1x4tEJWoTofIopFo6qWUU94jYrFZ0ubY05TqH3nWPJ1nKa1JWVFDINZ3fnrle/A==}
     engines: {node: 20 || >=22}
     hasBin: true
 
@@ -5760,36 +5784,25 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@launchql/core@2.11.5(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.10.1)':
+  '@launchql/core@2.11.7(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.10.1)':
     dependencies:
-      '@launchql/env': 2.4.1(graphql@15.10.1)
-      '@launchql/server-utils': 2.4.1(graphql@15.10.1)
-      '@launchql/templatizer': 2.3.0
-      '@launchql/types': 2.6.0(graphql@15.10.1)
+      '@launchql/env': 2.4.3(graphql@15.10.1)
+      '@launchql/server-utils': 2.4.3(graphql@15.10.1)
+      '@launchql/templatizer': 2.3.1
+      '@launchql/types': 2.6.2(graphql@15.10.1)
       '@pgsql/types': 17.6.1
       case: 1.6.3
       chalk: 4.1.2
       csv-to-pg: 2.0.10(@babel/core@7.28.0)
       glob: 11.0.3
       parse-package-name: 1.0.0
-      pg-cache: 1.3.2(graphql@15.10.1)
+      pg-cache: 1.3.4(graphql@15.10.1)
       pg-env: 1.1.0
       pgsql-deparser: 17.11.1
       pgsql-parser: 17.8.2
-      rimraf: 6.0.1
+      rimraf: 6.1.0
     transitivePeerDependencies:
       - '@babel/core'
-      - bufferutil
-      - graphql
-      - pg-native
-      - supports-color
-      - utf-8-validate
-
-  '@launchql/env@2.4.1(graphql@15.10.1)':
-    dependencies:
-      '@launchql/types': 2.6.0(graphql@15.10.1)
-      deepmerge: 4.3.1
-    transitivePeerDependencies:
       - bufferutil
       - graphql
       - pg-native
@@ -5799,6 +5812,17 @@ snapshots:
   '@launchql/env@2.4.1(graphql@15.5.2)':
     dependencies:
       '@launchql/types': 2.6.0(graphql@15.5.2)
+      deepmerge: 4.3.1
+    transitivePeerDependencies:
+      - bufferutil
+      - graphql
+      - pg-native
+      - supports-color
+      - utf-8-validate
+
+  '@launchql/env@2.4.3(graphql@15.10.1)':
+    dependencies:
+      '@launchql/types': 2.6.2(graphql@15.10.1)
       deepmerge: 4.3.1
     transitivePeerDependencies:
       - bufferutil
@@ -5858,9 +5882,9 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@launchql/server-utils@2.4.1(graphql@15.10.1)':
+  '@launchql/server-utils@2.4.1(graphql@15.5.2)':
     dependencies:
-      '@launchql/types': 2.6.0(graphql@15.10.1)
+      '@launchql/types': 2.6.0(graphql@15.5.2)
       cors: 2.8.5
       express: 5.1.0
       lru-cache: 11.1.0
@@ -5871,12 +5895,12 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@launchql/server-utils@2.4.1(graphql@15.5.2)':
+  '@launchql/server-utils@2.4.3(graphql@15.10.1)':
     dependencies:
-      '@launchql/types': 2.6.0(graphql@15.5.2)
+      '@launchql/types': 2.6.2(graphql@15.10.1)
       cors: 2.8.5
       express: 5.1.0
-      lru-cache: 11.1.0
+      lru-cache: 11.2.2
     transitivePeerDependencies:
       - bufferutil
       - graphql
@@ -5933,10 +5957,16 @@ snapshots:
       glob: 11.0.3
       rimraf: 6.0.1
 
-  '@launchql/types@2.6.0(graphql@15.10.1)':
+  '@launchql/templatizer@2.3.1':
+    dependencies:
+      case: 1.6.3
+      glob: 11.0.3
+      rimraf: 6.1.0
+
+  '@launchql/types@2.6.0(graphql@15.5.2)':
     dependencies:
       deepmerge: 4.3.1
-      graphile-build: 4.14.1(graphql@15.10.1)
+      graphile-build: 4.14.1(graphql@15.5.2)
       pg-env: 1.1.0
       postgraphile: 4.14.1
     transitivePeerDependencies:
@@ -5946,10 +5976,10 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@launchql/types@2.6.0(graphql@15.5.2)':
+  '@launchql/types@2.6.2(graphql@15.10.1)':
     dependencies:
       deepmerge: 4.3.1
-      graphile-build: 4.14.1(graphql@15.5.2)
+      graphile-build: 4.14.1(graphql@15.10.1)
       pg-env: 1.1.0
       postgraphile: 4.14.1
     transitivePeerDependencies:
@@ -8109,10 +8139,10 @@ snapshots:
     dependencies:
       foreground-child: 3.3.1
       jackspeak: 4.1.1
-      minimatch: 10.0.3
+      minimatch: 10.1.1
       minipass: 7.1.2
       package-json-from-dist: 1.0.1
-      path-scurry: 2.0.0
+      path-scurry: 2.0.1
 
   glob@7.2.3:
     dependencies:
@@ -8195,7 +8225,7 @@ snapshots:
   graphile-cache@1.3.2(graphql@15.5.2):
     dependencies:
       '@launchql/logger': 1.1.1
-      lru-cache: 11.1.0
+      lru-cache: 11.2.2
       pg: 8.16.3
       pg-cache: 1.3.2(graphql@15.5.2)
       postgraphile: 4.14.1
@@ -8262,7 +8292,7 @@ snapshots:
       graphile-simple-inflector: 0.1.1
       graphql-tag: 2.12.6(graphql@15.5.2)
       graphql-upload: 13.0.0(graphql@15.5.2)
-      lru-cache: 11.1.0
+      lru-cache: 11.2.2
       pg: 8.16.3
       postgraphile: 4.14.1
       postgraphile-derived-upload-field: 0.0.6(graphql@15.5.2)
@@ -9273,6 +9303,8 @@ snapshots:
 
   lru-cache@11.1.0: {}
 
+  lru-cache@11.2.2: {}
+
   lru-cache@4.1.5:
     dependencies:
       pseudomap: 1.0.2
@@ -9377,7 +9409,7 @@ snapshots:
 
   min-indent@1.0.1: {}
 
-  minimatch@10.0.3:
+  minimatch@10.1.1:
     dependencies:
       '@isaacs/brace-expansion': 5.0.0
 
@@ -9848,9 +9880,9 @@ snapshots:
       lru-cache: 10.4.3
       minipass: 7.1.2
 
-  path-scurry@2.0.0:
+  path-scurry@2.0.1:
     dependencies:
-      lru-cache: 11.1.0
+      lru-cache: 11.2.2
       minipass: 7.1.2
 
   path-to-regexp@8.2.0: {}
@@ -9866,10 +9898,10 @@ snapshots:
       '@pgsql/types': 17.6.1
       nested-obj: 0.0.1
 
-  pg-cache@1.3.2(graphql@15.10.1):
+  pg-cache@1.3.2(graphql@15.5.2):
     dependencies:
       '@launchql/logger': 1.1.1
-      '@launchql/types': 2.6.0(graphql@15.10.1)
+      '@launchql/types': 2.6.0(graphql@15.5.2)
       lru-cache: 11.1.0
       pg: 8.16.3
       pg-env: 1.1.0
@@ -9880,11 +9912,11 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  pg-cache@1.3.2(graphql@15.5.2):
+  pg-cache@1.3.4(graphql@15.10.1):
     dependencies:
       '@launchql/logger': 1.1.1
-      '@launchql/types': 2.6.0(graphql@15.5.2)
-      lru-cache: 11.1.0
+      '@launchql/types': 2.6.2(graphql@15.10.1)
+      lru-cache: 11.2.2
       pg: 8.16.3
       pg-env: 1.1.0
     transitivePeerDependencies:
@@ -9974,14 +10006,14 @@ snapshots:
       libpg-query: 17.6.0
       pgsql-deparser: 17.11.1
 
-  pgsql-test@2.11.5(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.10.1):
+  pgsql-test@2.11.10(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.10.1):
     dependencies:
-      '@launchql/core': 2.11.5(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.10.1)
-      '@launchql/env': 2.4.1(graphql@15.10.1)
-      '@launchql/server-utils': 2.4.1(graphql@15.10.1)
-      '@launchql/types': 2.6.0(graphql@15.10.1)
+      '@launchql/core': 2.11.7(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.10.1)
+      '@launchql/env': 2.4.3(graphql@15.10.1)
+      '@launchql/server-utils': 2.4.3(graphql@15.10.1)
+      '@launchql/types': 2.6.2(graphql@15.10.1)
       pg: 8.16.3
-      pg-cache: 1.3.2(graphql@15.10.1)
+      pg-cache: 1.3.4(graphql@15.10.1)
       pg-copy-streams: 6.0.6
       pg-env: 1.1.0
     transitivePeerDependencies:
@@ -10280,6 +10312,11 @@ snapshots:
       glob: 9.3.5
 
   rimraf@6.0.1:
+    dependencies:
+      glob: 11.0.3
+      package-json-from-dist: 1.0.1
+
+  rimraf@6.1.0:
     dependencies:
       glob: 11.0.3
       package-json-from-dist: 1.0.1
