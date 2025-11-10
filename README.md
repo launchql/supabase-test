@@ -13,7 +13,7 @@
 
 A friendly playground for building and validating Supabase Row-Level Security (RLS) using LaunchQL. It includes real-world examples, migrations, and a comprehensive test suite you can run locally.
 
-Built with [supabase-test](https://www.npmjs.com/package/supabase-test) — a Supabase-optimized version of `pgsql-test` for instant, isolated Postgres test databases with automatic rollbacks and Supabase defaults.
+Built with [`supabase-test`](https://www.npmjs.com/package/supabase-test) — a Supabase-optimized version of [`pgsql-test`](https://www.npmjs.com/package/pgsql-test) for instant, isolated Postgres test databases with automatic rollbacks and Supabase defaults.
 
 ## Features
 
