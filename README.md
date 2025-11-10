@@ -35,8 +35,9 @@ npx supabase start
 # install deps and run all package tests
 pnpm install
 
-# run every package’s tests
-pnpm test
+# rls-demo: run tests in watch mode
+cd packages/rls-demo
+pnpm test:watch
 ```
 
 ## getting started (step by step)
@@ -59,7 +60,9 @@ The repository is a launchql workspace, which is a hybrid `pnpm`/`lql` workspace
 - `packages/supabase`: supabase‑focused sql, tests, and helpers
 - `packages/rls-demo`: demo extension showcasing rls with users/products
 
-## scripts you’ll use often
+## testing
+
+If you want to see how to run tests in each of the relevant packages, here are handy snippets you may want to learn:
 
 ```bash
 # rls-demo: run tests in watch mode
@@ -81,6 +84,8 @@ pnpm test
 ```
 
 ## Adding a package using `lql`
+
+- [ ] TODO
 
 ## Requirements
 
