@@ -101,14 +101,11 @@ describe('tutorial: basic rls crud operations', () => {
   });
 
   it('should allow users to see only their own data in list queries', async () => {
-    // db.setContext({role: 'service_role'});
-
     // set context to user1
     db.setContext({
       role: 'authenticated',
       'request.jwt.claim.sub': user1.id
     });
-
 
     // create multiple users as admin
     await db.one(
@@ -124,7 +121,6 @@ describe('tutorial: basic rls crud operations', () => {
       'request.jwt.claim.sub': user2.id
     });
 
-
     await db.one(
       `INSERT INTO rls_test.pets (name, breed, user_id) 
        VALUES ($1, $2, $3) 
@@ -137,7 +133,6 @@ describe('tutorial: basic rls crud operations', () => {
       role: 'authenticated',
       'request.jwt.claim.sub': user3.id
     });
-
 
     await db.one(
       `INSERT INTO rls_test.pets (name, breed, user_id) 

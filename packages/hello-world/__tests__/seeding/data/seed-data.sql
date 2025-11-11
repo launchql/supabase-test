@@ -8,7 +8,7 @@ INSERT INTO auth.users (id, email) VALUES
   ('550e8400-e29b-41d4-a716-446655440003', 'charlie@example.com'),
   ('550e8400-e29b-41d4-a716-446655440004', 'diana@example.com');
 
--- Insert test products
+-- Insert test pets
 INSERT INTO rls_test.pets (id, name, breed, user_id) VALUES 
   ('660e8400-e29b-41d4-a716-446655440001', 'Fido', 'Labrador', '550e8400-e29b-41d4-a716-446655440001'),
   ('660e8400-e29b-41d4-a716-446655440002', 'Buddy', 'Golden Retriever', '550e8400-e29b-41d4-a716-446655440002'),

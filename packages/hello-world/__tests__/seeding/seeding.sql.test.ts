@@ -1,5 +1,6 @@
 import { getConnections, PgTestClient, seed } from 'supabase-test';
 import path from 'path';
+import { users } from './data/seed-data';
 
 let db: PgTestClient;
 let teardown: () => Promise<void>;
@@ -30,24 +31,6 @@ beforeEach(async () => {
 afterEach(async () => {
   await db.afterEach();
 });
-
-const users = [
-  {
-    id: '550e8400-e29b-41d4-a716-446655440001',
-    email: 'tutorial1@example.com',
-    name: 'Tutorial User 1'
-  },
-  {
-    id: '550e8400-e29b-41d4-a716-446655440002',
-    email: 'tutorial2@example.com',
-    name: 'Tutorial User 2'
-  },
-  {
-    id: '550e8400-e29b-41d4-a716-446655440003',
-    email: 'tutorial3@example.com',
-    name: 'Tutorial User 3'
-  }
-];
 
 describe('tutorial: testing with sql file seeding', () => {
   it('should work with sql file seed function', async () => {
