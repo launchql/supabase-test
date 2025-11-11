@@ -29,6 +29,14 @@ afterAll(async () => {
   await teardown();
 });
 
+beforeEach(async () => {
+  await db.beforeEach();
+});
+
+afterEach(async () => {
+  await db.afterEach();
+});
+
 describe('csv seeding', () => {
   it('has loaded rows from csv files', async () => {
     const usersRes = await pg.query('SELECT COUNT(*) FROM auth.users');
@@ -49,6 +57,38 @@ describe('csv seeding', () => {
       [users[0].id]
     );
     expect(+alicePets.rows[0].count).toBe(1);
+  });
+
+  it('should enforce RLS - users can only see their own pets', async () => {
+    // set context to first user
+    db.setContext({
+      role: 'authenticated',
+      'request.jwt.claim.sub': users[0].id
+    });
+
+    // user1 should only see their own pet (Fido)
+    const user1Pets = await db.many(
+      `SELECT id, name, breed, user_id FROM rls_test.pets ORDER BY name`
+    );
+
+    expect(user1Pets.length).toBe(1);
+    expect(user1Pets[0].user_id).toBe(users[0].id);
+    expect(user1Pets[0].name).toBe('Fido');
+
+    // set context to second user
+    db.setContext({
+      role: 'authenticated',
+      'request.jwt.claim.sub': users[1].id
+    });
+
+    // user2 should only see their own pet (Buddy)
+    const user2Pets = await db.many(
+      `SELECT id, name, breed, user_id FROM rls_test.pets ORDER BY name`
+    );
+
+    expect(user2Pets.length).toBe(1);
+    expect(user2Pets[0].user_id).toBe(users[1].id);
+    expect(user2Pets[0].name).toBe('Buddy');
   });
 });
 
