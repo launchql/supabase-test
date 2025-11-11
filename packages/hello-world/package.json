@@ -1,8 +1,8 @@
 {
-  "name": "@lql-pg/rls-demo",
+  "name": "@lql-pg/hello-world",
   "version": "0.0.1",
   "author": "Interweb <developers@interweb.co>",
-  "description": "RLS (Row Level Security) demo extension with users and products tables",
+  "description": "Hello World extension with Row Level Security (RLS) demo",
   "publishConfig": {
     "access": "public"
   },

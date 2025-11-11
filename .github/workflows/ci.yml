@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         package:
-          - rls-demo
+          - hello-world
           - supabase
 
     env:

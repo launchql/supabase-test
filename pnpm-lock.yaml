@@ -58,7 +58,7 @@ importers:
         version: 4.4.1
       supabase-test:
         specifier: ^0.0.9
-        version: 0.0.9(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.10.1)
+        version: 0.0.9(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.5.2)
       ts-jest:
         specifier: ^29.4.5
         version: 29.4.5(@babel/core@7.28.0)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.0))(jest-util@29.7.0)(jest@29.7.0(@types/node@22.17.1)(ts-node@10.9.2(@types/node@22.17.1)(typescript@5.9.3)))(typescript@5.9.3)
@@ -69,11 +69,11 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  packages/rls-demo:
+  packages/hello-world:
     devDependencies:
       '@launchql/cli':
         specifier: ^4.12.3
-        version: 4.12.3(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphql@15.5.2)(pg-sql2@4.14.1(pg@8.16.3))(postgraphile-core@4.14.1(graphql@15.5.2)(pg@8.16.3))
+        version: 4.12.3(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphql@15.10.1)(pg-sql2@4.14.1(pg@8.16.3))(postgraphile-core@4.14.1(graphql@15.10.1)(pg@8.16.3))
 
   packages/supabase: {}
 
@@ -608,18 +608,10 @@ packages:
   '@launchql/content-type-stream@2.3.0':
     resolution: {integrity: sha512-+Qh60ScSVo8Lty2T1yRtJBEhVpsL5+s17lkLeODZlJcHEH54ks6xiYjFsyBBZfls5iNs2p9bJXDVtrAzz+DqLA==}
 
-  '@launchql/core@2.11.3':
-    resolution: {integrity: sha512-WDcEakU+E2XaPLS/EX6UuYGQnAq3N7/nFqinWEwt/vQXbMrjbSb6uOVMNS8CNGQXA3uW7oACF7THvllHnjcJAA==}
-    peerDependencies:
-      '@pgsql/types': ^17.6.1
-
   '@launchql/core@2.11.7':
     resolution: {integrity: sha512-2BXrl2IEBmSXaQDd72YSCSMcT5lUypCIP6Xqrdpmkh7jRj8FAmk7jmIMiXzNjS8YIQHHId516k9Me04dD7s80g==}
     peerDependencies:
       '@pgsql/types': ^17.6.1
-
-  '@launchql/env@2.4.1':
-    resolution: {integrity: sha512-ZnoCtrb49jvoj5vdDVFDdFhjwlcl3M2LjZg8xJHTgts4c5RhtXjz5hKZUb9usZtqbMdZxbHK9b2c9kWER4+doQ==}
 
   '@launchql/env@2.4.3':
     resolution: {integrity: sha512-vdUswZ3YAvKE/XtVHUiW8g4f1jl6wOgL1Q9P5s8k7IzXDu0CfmlTNDU9GZ1brbL3dBe2TbzzfJh8o5nNO7wW6g==}
@@ -637,23 +629,14 @@ packages:
   '@launchql/s3-utils@2.2.0':
     resolution: {integrity: sha512-zNN76fusp0bgCSen+in46MAD1dfn/JdUZnvCGPGPYlF2lpBy+ZXN0Tt9h4PJaJct5pl7FskoArP3mrf2bUvYKg==}
 
-  '@launchql/server-utils@2.4.1':
-    resolution: {integrity: sha512-1TkNj4RBG8BykduQmtHb2hQmvz1TTHb9MPWOYA6Vu+SV2B+dZUtxTuL8P8WD9eaRVxXIuhI8XumT3RlxtWbOPA==}
-
   '@launchql/server-utils@2.4.3':
     resolution: {integrity: sha512-ggMRmca6wqf/z1B77D6RdIYu+zFEdMMi238EPeHMOx2vhj2KrhfOk+WJExWkz3Eg9kCcyR6PYI6jCY38DAnhWw==}
 
   '@launchql/server@2.5.2':
     resolution: {integrity: sha512-4ChzZuWFK4WgWAr6evIIBH4xhu8toJ1j7218JJlpZQQU/UPdzk6UnuY5gyksmPXYSaU3fgmDgy9rfjF44s9bwQ==}
 
-  '@launchql/templatizer@2.3.0':
-    resolution: {integrity: sha512-Jrg3U5rupg6JJvoxGHBcjzL5FVdKbA+ggw92x36wjuM5PsCYQ6X+f2qXLXwGEGiVMaVzTA3hWlSZH7SIfGj2TA==}
-
   '@launchql/templatizer@2.3.1':
     resolution: {integrity: sha512-mgti0JmC/OM/4pj6q09h0gfvMQAo/5f9FKYW5KE8VfAc8kSXdUR20eSlZhL0byg+mC9HAQaU5JNoM7OZwzDxTQ==}
-
-  '@launchql/types@2.6.0':
-    resolution: {integrity: sha512-62KMpcQdCET3fClKRkIzt5l9QMr1gzw11HWJ3d9h6VyeckaAywo19dtKsmvmhl0yHNVRNhMkEnDrom7YDH0F8w==}
 
   '@launchql/types@2.6.2':
     resolution: {integrity: sha512-3T9A8Zh5pLvFyxFLRqdQgJdYWDeiiLvjO7nNwuqKzME7qOOJd31zF+5QbqQNJQyer397E8dAYpQhKEXWH0HjmA==}
@@ -3692,9 +3675,6 @@ packages:
   pg-ast@2.3.1:
     resolution: {integrity: sha512-lodfguVAd2S0PslmYBJm7dXp2w5/JTSdJrM0IiS3+0MeWtEs99c56525IDr6u1Ig+hJpsOLQV94gluy35tpb/w==}
 
-  pg-cache@1.3.2:
-    resolution: {integrity: sha512-zXrYHh1i1mHZrmHEYLFT6+ItcmoBvj/TCxrPiZBmLw9xtVCkW/eTH21+xOFiL1kPYkMeQhiDpm9031UNLRYoDw==}
-
   pg-cache@1.3.4:
     resolution: {integrity: sha512-ifN+Ga6cHD3xCC/5Pcdua5ZpQSDX7PcF72fQpJwBZ5BoQ2pGYGlcPhTnPxmIcjEYQiKohlTw79eCPgKj7CKU6Q==}
 
@@ -4043,11 +4023,6 @@ packages:
   rimraf@4.4.1:
     resolution: {integrity: sha512-Gk8NlF062+T9CqNGn6h4tls3k6T1+/nXdOcSZVikNVtlRdYpA7wRJJMoXmuvOnLW844rPjdQ7JgXCYM6PPC/og==}
     engines: {node: '>=14'}
-    hasBin: true
-
-  rimraf@6.0.1:
-    resolution: {integrity: sha512-9dkvaxAsk/xNXSJzMgFqqMCuFgt2+KsOFek3TMLfo8NCPfWpBmqwyNn5Y+NX56QUYfCtsyhF3ayiboEoUmJk/A==}
-    engines: {node: 20 || >=22}
     hasBin: true
 
   rimraf@6.1.0:
@@ -5725,20 +5700,20 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@launchql/cli@4.12.3(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphql@15.5.2)(pg-sql2@4.14.1(pg@8.16.3))(postgraphile-core@4.14.1(graphql@15.5.2)(pg@8.16.3))':
+  '@launchql/cli@4.12.3(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphql@15.10.1)(pg-sql2@4.14.1(pg@8.16.3))(postgraphile-core@4.14.1(graphql@15.10.1)(pg@8.16.3))':
     dependencies:
-      '@launchql/core': 2.11.3(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.5.2)
-      '@launchql/env': 2.4.1(graphql@15.5.2)
-      '@launchql/explorer': 2.5.2(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphql@15.5.2)(pg-sql2@4.14.1(pg@8.16.3))(postgraphile-core@4.14.1(graphql@15.5.2)(pg@8.16.3))
-      '@launchql/server': 2.5.2(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphql@15.5.2)(pg-sql2@4.14.1(pg@8.16.3))(postgraphile-core@4.14.1(graphql@15.5.2)(pg@8.16.3))
-      '@launchql/server-utils': 2.4.1(graphql@15.5.2)
-      '@launchql/templatizer': 2.3.0
-      '@launchql/types': 2.6.0(graphql@15.5.2)
+      '@launchql/core': 2.11.7(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.10.1)
+      '@launchql/env': 2.4.3(graphql@15.10.1)
+      '@launchql/explorer': 2.5.2(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphql@15.10.1)(pg-sql2@4.14.1(pg@8.16.3))(postgraphile-core@4.14.1(graphql@15.10.1)(pg@8.16.3))
+      '@launchql/server': 2.5.2(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphql@15.10.1)(pg-sql2@4.14.1(pg@8.16.3))(postgraphile-core@4.14.1(graphql@15.10.1)(pg@8.16.3))
+      '@launchql/server-utils': 2.4.3(graphql@15.10.1)
+      '@launchql/templatizer': 2.3.1
+      '@launchql/types': 2.6.2(graphql@15.10.1)
       chalk: 4.1.2
       inquirerer: 2.0.8
       js-yaml: 4.1.0
       minimist: 1.2.8
-      pg-cache: 1.3.2(graphql@15.5.2)
+      pg-cache: 1.3.4(graphql@15.10.1)
       pg-env: 1.1.0
       shelljs: 0.9.2
     transitivePeerDependencies:
@@ -5759,31 +5734,6 @@ snapshots:
       etag-hash: 2.3.0
       mime-bytes: 0.3.0
       uuid-hash: 2.2.0
-
-  '@launchql/core@2.11.3(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.5.2)':
-    dependencies:
-      '@launchql/env': 2.4.1(graphql@15.5.2)
-      '@launchql/server-utils': 2.4.1(graphql@15.5.2)
-      '@launchql/templatizer': 2.3.0
-      '@launchql/types': 2.6.0(graphql@15.5.2)
-      '@pgsql/types': 17.6.1
-      case: 1.6.3
-      chalk: 4.1.2
-      csv-to-pg: 2.0.10(@babel/core@7.28.0)
-      glob: 11.0.3
-      parse-package-name: 1.0.0
-      pg-cache: 1.3.2(graphql@15.5.2)
-      pg-env: 1.1.0
-      pgsql-deparser: 17.11.1
-      pgsql-parser: 17.8.2
-      rimraf: 6.0.1
-    transitivePeerDependencies:
-      - '@babel/core'
-      - bufferutil
-      - graphql
-      - pg-native
-      - supports-color
-      - utf-8-validate
 
   '@launchql/core@2.11.7(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.10.1)':
     dependencies:
@@ -5810,11 +5760,25 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@launchql/env@2.4.1(graphql@15.5.2)':
+  '@launchql/core@2.11.7(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.5.2)':
     dependencies:
-      '@launchql/types': 2.6.0(graphql@15.5.2)
-      deepmerge: 4.3.1
+      '@launchql/env': 2.4.3(graphql@15.5.2)
+      '@launchql/server-utils': 2.4.3(graphql@15.5.2)
+      '@launchql/templatizer': 2.3.1
+      '@launchql/types': 2.6.2(graphql@15.5.2)
+      '@pgsql/types': 17.6.1
+      case: 1.6.3
+      chalk: 4.1.2
+      csv-to-pg: 2.0.10(@babel/core@7.28.0)
+      glob: 11.0.3
+      parse-package-name: 1.0.0
+      pg-cache: 1.3.4(graphql@15.5.2)
+      pg-env: 1.1.0
+      pgsql-deparser: 17.11.1
+      pgsql-parser: 17.8.2
+      rimraf: 6.1.0
     transitivePeerDependencies:
+      - '@babel/core'
       - bufferutil
       - graphql
       - pg-native
@@ -5832,20 +5796,31 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@launchql/explorer@2.5.2(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphql@15.5.2)(pg-sql2@4.14.1(pg@8.16.3))(postgraphile-core@4.14.1(graphql@15.5.2)(pg@8.16.3))':
+  '@launchql/env@2.4.3(graphql@15.5.2)':
     dependencies:
-      '@launchql/env': 2.4.1(graphql@15.5.2)
-      '@launchql/s3-streamer': 2.5.1(graphql@15.5.2)
-      '@launchql/server-utils': 2.4.1(graphql@15.5.2)
-      '@launchql/types': 2.6.0(graphql@15.5.2)
+      '@launchql/types': 2.6.2(graphql@15.5.2)
+      deepmerge: 4.3.1
+    transitivePeerDependencies:
+      - bufferutil
+      - graphql
+      - pg-native
+      - supports-color
+      - utf-8-validate
+
+  '@launchql/explorer@2.5.2(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphql@15.10.1)(pg-sql2@4.14.1(pg@8.16.3))(postgraphile-core@4.14.1(graphql@15.10.1)(pg@8.16.3))':
+    dependencies:
+      '@launchql/env': 2.4.3(graphql@15.10.1)
+      '@launchql/s3-streamer': 2.5.1(graphql@15.10.1)
+      '@launchql/server-utils': 2.4.3(graphql@15.10.1)
+      '@launchql/types': 2.6.2(graphql@15.10.1)
       '@launchql/upload-names': 2.2.0
       '@launchql/url-domains': 2.2.0
       express: 5.1.0
-      graphile-build: 4.14.1(graphql@15.5.2)
-      graphile-cache: 1.3.2(graphql@15.5.2)
-      graphile-settings: 2.5.1(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphql@15.5.2)(pg-sql2@4.14.1(pg@8.16.3))(postgraphile-core@4.14.1(graphql@15.5.2)(pg@8.16.3))
-      graphql-upload: 13.0.0(graphql@15.5.2)
-      pg-cache: 1.3.2(graphql@15.5.2)
+      graphile-build: 4.14.1(graphql@15.10.1)
+      graphile-cache: 1.3.2(graphql@15.10.1)
+      graphile-settings: 2.5.1(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphql@15.10.1)(pg-sql2@4.14.1(pg@8.16.3))(postgraphile-core@4.14.1(graphql@15.10.1)(pg@8.16.3))
+      graphql-upload: 13.0.0(graphql@15.10.1)
+      pg-cache: 1.3.4(graphql@15.10.1)
       postgraphile: 4.14.1
     transitivePeerDependencies:
       - aws-crt
@@ -5862,12 +5837,12 @@ snapshots:
     dependencies:
       chalk: 4.1.2
 
-  '@launchql/s3-streamer@2.5.1(graphql@15.5.2)':
+  '@launchql/s3-streamer@2.5.1(graphql@15.10.1)':
     dependencies:
       '@aws-sdk/client-s3': 3.864.0
       '@aws-sdk/lib-storage': 3.864.0(@aws-sdk/client-s3@3.864.0)
       '@launchql/content-type-stream': 2.3.0
-      '@launchql/types': 2.6.0(graphql@15.5.2)
+      '@launchql/types': 2.6.2(graphql@15.10.1)
     transitivePeerDependencies:
       - aws-crt
       - bufferutil
@@ -5883,19 +5858,6 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@launchql/server-utils@2.4.1(graphql@15.5.2)':
-    dependencies:
-      '@launchql/types': 2.6.0(graphql@15.5.2)
-      cors: 2.8.5
-      express: 5.1.0
-      lru-cache: 11.1.0
-    transitivePeerDependencies:
-      - bufferutil
-      - graphql
-      - pg-native
-      - supports-color
-      - utf-8-validate
-
   '@launchql/server-utils@2.4.3(graphql@15.10.1)':
     dependencies:
       '@launchql/types': 2.6.2(graphql@15.10.1)
@@ -5909,35 +5871,48 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@launchql/server@2.5.2(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphql@15.5.2)(pg-sql2@4.14.1(pg@8.16.3))(postgraphile-core@4.14.1(graphql@15.5.2)(pg@8.16.3))':
+  '@launchql/server-utils@2.4.3(graphql@15.5.2)':
+    dependencies:
+      '@launchql/types': 2.6.2(graphql@15.5.2)
+      cors: 2.8.5
+      express: 5.1.0
+      lru-cache: 11.2.2
+    transitivePeerDependencies:
+      - bufferutil
+      - graphql
+      - pg-native
+      - supports-color
+      - utf-8-validate
+
+  '@launchql/server@2.5.2(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphql@15.10.1)(pg-sql2@4.14.1(pg@8.16.3))(postgraphile-core@4.14.1(graphql@15.10.1)(pg@8.16.3))':
     dependencies:
       '@graphile-contrib/pg-many-to-many': 1.0.2
-      '@launchql/env': 2.4.1(graphql@15.5.2)
+      '@launchql/env': 2.4.3(graphql@15.10.1)
       '@launchql/s3-utils': 2.2.0
-      '@launchql/server-utils': 2.4.1(graphql@15.5.2)
-      '@launchql/types': 2.6.0(graphql@15.5.2)
+      '@launchql/server-utils': 2.4.3(graphql@15.10.1)
+      '@launchql/types': 2.6.2(graphql@15.10.1)
       '@launchql/upload-names': 2.2.0
       '@launchql/url-domains': 2.2.0
-      '@pyramation/postgis': 0.1.1(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphile-build@4.14.1(graphql@15.5.2))(graphql@15.5.2)(pg-sql2@4.14.1(pg@8.16.3))
-      '@pyramation/postgraphile-plugin-fulltext-filter': 2.0.0(graphql@15.5.2)(pg@8.16.3)(postgraphile-core@4.14.1(graphql@15.5.2)(pg@8.16.3))(postgraphile-plugin-connection-filter@2.3.0)
+      '@pyramation/postgis': 0.1.1(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphile-build@4.14.1(graphql@15.10.1))(graphql@15.10.1)(pg-sql2@4.14.1(pg@8.16.3))
+      '@pyramation/postgraphile-plugin-fulltext-filter': 2.0.0(graphql@15.10.1)(pg@8.16.3)(postgraphile-core@4.14.1(graphql@15.10.1)(pg@8.16.3))(postgraphile-plugin-connection-filter@2.3.0)
       cors: 2.8.5
       dotenv: 17.2.3
       express: 5.1.0
-      graphile-build: 4.14.1(graphql@15.5.2)
-      graphile-cache: 1.3.2(graphql@15.5.2)
-      graphile-i18n: 0.0.3(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphql@15.5.2)
-      graphile-meta-schema: 0.2.5(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphile-build@4.14.1(graphql@15.5.2))
+      graphile-build: 4.14.1(graphql@15.10.1)
+      graphile-cache: 1.3.2(graphql@15.10.1)
+      graphile-i18n: 0.0.3(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphql@15.10.1)
+      graphile-meta-schema: 0.2.5(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphile-build@4.14.1(graphql@15.10.1))
       graphile-query: 2.3.0
       graphile-search-plugin: 0.1.2
-      graphile-settings: 2.5.1(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphql@15.5.2)(pg-sql2@4.14.1(pg@8.16.3))(postgraphile-core@4.14.1(graphql@15.5.2)(pg@8.16.3))
+      graphile-settings: 2.5.1(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphql@15.10.1)(pg-sql2@4.14.1(pg@8.16.3))(postgraphile-core@4.14.1(graphql@15.10.1)(pg@8.16.3))
       graphile-simple-inflector: 0.1.1
-      graphql-tag: 2.12.6(graphql@15.5.2)
-      graphql-upload: 13.0.0(graphql@15.5.2)
-      lru-cache: 11.1.0
+      graphql-tag: 2.12.6(graphql@15.10.1)
+      graphql-upload: 13.0.0(graphql@15.10.1)
+      lru-cache: 11.2.2
       pg: 8.16.3
       pg-query-context: 2.2.0
       postgraphile: 4.14.1
-      postgraphile-derived-upload-field: 0.0.6(graphql@15.5.2)
+      postgraphile-derived-upload-field: 0.0.6(graphql@15.10.1)
       postgraphile-plugin-connection-filter: 2.3.0
       postgraphile-plugin-connection-filter-postgis: 1.0.0-alpha.6
       request-ip: 3.3.0
@@ -5952,22 +5927,16 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@launchql/templatizer@2.3.0':
-    dependencies:
-      case: 1.6.3
-      glob: 11.0.3
-      rimraf: 6.0.1
-
   '@launchql/templatizer@2.3.1':
     dependencies:
       case: 1.6.3
       glob: 11.0.3
       rimraf: 6.1.0
 
-  '@launchql/types@2.6.0(graphql@15.5.2)':
+  '@launchql/types@2.6.2(graphql@15.10.1)':
     dependencies:
       deepmerge: 4.3.1
-      graphile-build: 4.14.1(graphql@15.5.2)
+      graphile-build: 4.14.1(graphql@15.10.1)
       pg-env: 1.1.0
       postgraphile: 4.14.1
     transitivePeerDependencies:
@@ -5977,10 +5946,10 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@launchql/types@2.6.2(graphql@15.10.1)':
+  '@launchql/types@2.6.2(graphql@15.5.2)':
     dependencies:
       deepmerge: 4.3.1
-      graphile-build: 4.14.1(graphql@15.10.1)
+      graphile-build: 4.14.1(graphql@15.5.2)
       pg-env: 1.1.0
       postgraphile: 4.14.1
     transitivePeerDependencies:
@@ -6342,22 +6311,22 @@ snapshots:
       '@babel/core': 7.28.0
       '@babel/runtime': 7.28.3
 
-  '@pyramation/postgis@0.1.1(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphile-build@4.14.1(graphql@15.5.2))(graphql@15.5.2)(pg-sql2@4.14.1(pg@8.16.3))':
+  '@pyramation/postgis@0.1.1(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphile-build@4.14.1(graphql@15.10.1))(graphql@15.10.1)(pg-sql2@4.14.1(pg@8.16.3))':
     dependencies:
       debug: 4.4.3
-      graphile-build: 4.14.1(graphql@15.5.2)
-      graphile-build-pg: 4.14.1(graphql@15.5.2)(pg@8.16.3)
-      graphql: 15.5.2
+      graphile-build: 4.14.1(graphql@15.10.1)
+      graphile-build-pg: 4.14.1(graphql@15.10.1)(pg@8.16.3)
+      graphql: 15.10.1
       pg-sql2: 4.14.1(pg@8.16.3)
       tslib: 1.14.1
     transitivePeerDependencies:
       - supports-color
 
-  '@pyramation/postgraphile-plugin-fulltext-filter@2.0.0(graphql@15.5.2)(pg@8.16.3)(postgraphile-core@4.14.1(graphql@15.5.2)(pg@8.16.3))(postgraphile-plugin-connection-filter@2.3.0)':
+  '@pyramation/postgraphile-plugin-fulltext-filter@2.0.0(graphql@15.10.1)(pg@8.16.3)(postgraphile-core@4.14.1(graphql@15.10.1)(pg@8.16.3))(postgraphile-plugin-connection-filter@2.3.0)':
     dependencies:
-      graphile-build-pg: 4.14.1(graphql@15.5.2)(pg@8.16.3)
+      graphile-build-pg: 4.14.1(graphql@15.10.1)(pg@8.16.3)
       pg-tsquery: 8.4.2
-      postgraphile-core: 4.14.1(graphql@15.5.2)(pg@8.16.3)
+      postgraphile-core: 4.14.1(graphql@15.10.1)(pg@8.16.3)
       postgraphile-plugin-connection-filter: 2.3.0
     transitivePeerDependencies:
       - graphql
@@ -8177,6 +8146,21 @@ snapshots:
 
   graphemer@1.4.0: {}
 
+  graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3):
+    dependencies:
+      '@graphile/lru': 4.11.0
+      chalk: 2.4.2
+      debug: 4.4.3
+      graphile-build: 4.14.1(graphql@15.10.1)
+      jsonwebtoken: 9.0.2
+      lodash: 4.17.21
+      lru-cache: 4.1.5
+      pg: 8.16.3
+      pg-sql2: 4.14.1(pg@8.16.3)
+    transitivePeerDependencies:
+      - graphql
+      - supports-color
+
   graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3):
     dependencies:
       '@graphile/lru': 4.11.0
@@ -8222,12 +8206,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  graphile-cache@1.3.2(graphql@15.5.2):
+  graphile-cache@1.3.2(graphql@15.10.1):
     dependencies:
       '@launchql/logger': 1.1.1
-      lru-cache: 11.1.0
+      lru-cache: 11.2.2
       pg: 8.16.3
-      pg-cache: 1.3.2(graphql@15.5.2)
+      pg-cache: 1.3.4(graphql@15.10.1)
       postgraphile: 4.14.1
     transitivePeerDependencies:
       - bufferutil
@@ -8236,23 +8220,23 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  graphile-i18n@0.0.3(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphql@15.5.2):
+  graphile-i18n@0.0.3(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphql@15.10.1):
     dependencies:
       '@babel/runtime': 7.28.3
       accept-language-parser: 1.5.0
       dataloader: 2.2.3
       envalid: 6.0.2
-      graphile-build: 4.14.1(graphql@15.5.2)
-      graphile-utils: 4.14.1(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphile-build@4.14.1(graphql@15.5.2))
+      graphile-build: 4.14.1(graphql@15.10.1)
+      graphile-utils: 4.14.1(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphile-build@4.14.1(graphql@15.10.1))
     transitivePeerDependencies:
       - graphile-build-pg
       - graphql
       - supports-color
 
-  graphile-meta-schema@0.2.5(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphile-build@4.14.1(graphql@15.5.2)):
+  graphile-meta-schema@0.2.5(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphile-build@4.14.1(graphql@15.10.1)):
     dependencies:
       '@babel/runtime': 7.28.3
-      graphile-utils: 4.14.1(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphile-build@4.14.1(graphql@15.5.2))
+      graphile-utils: 4.14.1(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphile-build@4.14.1(graphql@15.10.1))
     transitivePeerDependencies:
       - graphile-build
       - graphile-build-pg
@@ -8273,29 +8257,29 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.28.3
 
-  graphile-settings@2.5.1(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphql@15.5.2)(pg-sql2@4.14.1(pg@8.16.3))(postgraphile-core@4.14.1(graphql@15.5.2)(pg@8.16.3)):
+  graphile-settings@2.5.1(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphql@15.10.1)(pg-sql2@4.14.1(pg@8.16.3))(postgraphile-core@4.14.1(graphql@15.10.1)(pg@8.16.3)):
     dependencies:
       '@graphile-contrib/pg-many-to-many': 1.0.2
-      '@launchql/env': 2.4.1(graphql@15.5.2)
-      '@launchql/s3-streamer': 2.5.1(graphql@15.5.2)
-      '@launchql/types': 2.6.0(graphql@15.5.2)
+      '@launchql/env': 2.4.3(graphql@15.10.1)
+      '@launchql/s3-streamer': 2.5.1(graphql@15.10.1)
+      '@launchql/types': 2.6.2(graphql@15.10.1)
       '@launchql/upload-names': 2.2.0
-      '@pyramation/postgis': 0.1.1(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphile-build@4.14.1(graphql@15.5.2))(graphql@15.5.2)(pg-sql2@4.14.1(pg@8.16.3))
-      '@pyramation/postgraphile-plugin-fulltext-filter': 2.0.0(graphql@15.5.2)(pg@8.16.3)(postgraphile-core@4.14.1(graphql@15.5.2)(pg@8.16.3))(postgraphile-plugin-connection-filter@2.3.0)
+      '@pyramation/postgis': 0.1.1(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphile-build@4.14.1(graphql@15.10.1))(graphql@15.10.1)(pg-sql2@4.14.1(pg@8.16.3))
+      '@pyramation/postgraphile-plugin-fulltext-filter': 2.0.0(graphql@15.10.1)(pg@8.16.3)(postgraphile-core@4.14.1(graphql@15.10.1)(pg@8.16.3))(postgraphile-plugin-connection-filter@2.3.0)
       cors: 2.8.5
       express: 5.1.0
-      graphile-build: 4.14.1(graphql@15.5.2)
-      graphile-i18n: 0.0.3(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphql@15.5.2)
-      graphile-meta-schema: 0.2.5(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphile-build@4.14.1(graphql@15.5.2))
+      graphile-build: 4.14.1(graphql@15.10.1)
+      graphile-i18n: 0.0.3(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphql@15.10.1)
+      graphile-meta-schema: 0.2.5(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphile-build@4.14.1(graphql@15.10.1))
       graphile-query: 2.3.0
       graphile-search-plugin: 0.1.2
       graphile-simple-inflector: 0.1.1
-      graphql-tag: 2.12.6(graphql@15.5.2)
-      graphql-upload: 13.0.0(graphql@15.5.2)
-      lru-cache: 11.1.0
+      graphql-tag: 2.12.6(graphql@15.10.1)
+      graphql-upload: 13.0.0(graphql@15.10.1)
+      lru-cache: 11.2.2
       pg: 8.16.3
       postgraphile: 4.14.1
-      postgraphile-derived-upload-field: 0.0.6(graphql@15.5.2)
+      postgraphile-derived-upload-field: 0.0.6(graphql@15.10.1)
       postgraphile-plugin-connection-filter: 2.3.0
       postgraphile-plugin-connection-filter-postgis: 1.0.0-alpha.6
       request-ip: 3.3.0
@@ -8314,11 +8298,11 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.28.3
 
-  graphile-utils@4.14.1(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphile-build@4.14.1(graphql@15.10.1)):
+  graphile-utils@4.14.1(graphile-build-pg@4.14.1(graphql@15.10.1)(pg@8.16.3))(graphile-build@4.14.1(graphql@15.10.1)):
     dependencies:
       debug: 4.4.3
       graphile-build: 4.14.1(graphql@15.10.1)
-      graphile-build-pg: 4.14.1(graphql@15.5.2)(pg@8.16.3)
+      graphile-build-pg: 4.14.1(graphql@15.10.1)(pg@8.16.3)
       graphql: 15.5.2
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -8350,25 +8334,25 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  graphql-tag@2.12.6(graphql@15.5.2):
+  graphql-tag@2.12.6(graphql@15.10.1):
     dependencies:
-      graphql: 15.5.2
+      graphql: 15.10.1
       tslib: 2.8.1
 
-  graphql-upload@11.0.0(graphql@15.5.2):
+  graphql-upload@11.0.0(graphql@15.10.1):
     dependencies:
       busboy: 0.3.1
       fs-capacitor: 6.2.0
-      graphql: 15.5.2
+      graphql: 15.10.1
       http-errors: 1.8.1
       isobject: 4.0.0
       object-path: 0.11.8
 
-  graphql-upload@13.0.0(graphql@15.5.2):
+  graphql-upload@13.0.0(graphql@15.10.1):
     dependencies:
       busboy: 0.3.1
       fs-capacitor: 6.2.0
-      graphql: 15.5.2
+      graphql: 15.10.1
       http-errors: 1.8.1
       object-path: 0.11.8
 
@@ -9898,11 +9882,11 @@ snapshots:
       '@pgsql/types': 17.6.1
       nested-obj: 0.0.1
 
-  pg-cache@1.3.2(graphql@15.5.2):
+  pg-cache@1.3.4(graphql@15.10.1):
     dependencies:
       '@launchql/logger': 1.1.1
-      '@launchql/types': 2.6.0(graphql@15.5.2)
-      lru-cache: 11.1.0
+      '@launchql/types': 2.6.2(graphql@15.10.1)
+      lru-cache: 11.2.2
       pg: 8.16.3
       pg-env: 1.1.0
     transitivePeerDependencies:
@@ -9912,10 +9896,10 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  pg-cache@1.3.4(graphql@15.10.1):
+  pg-cache@1.3.4(graphql@15.5.2):
     dependencies:
       '@launchql/logger': 1.1.1
-      '@launchql/types': 2.6.2(graphql@15.10.1)
+      '@launchql/types': 2.6.2(graphql@15.5.2)
       lru-cache: 11.2.2
       pg: 8.16.3
       pg-env: 1.1.0
@@ -10006,14 +9990,14 @@ snapshots:
       libpg-query: 17.6.0
       pgsql-deparser: 17.11.1
 
-  pgsql-test@2.11.10(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.10.1):
+  pgsql-test@2.11.10(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.5.2):
     dependencies:
-      '@launchql/core': 2.11.7(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.10.1)
-      '@launchql/env': 2.4.3(graphql@15.10.1)
-      '@launchql/server-utils': 2.4.3(graphql@15.10.1)
-      '@launchql/types': 2.6.2(graphql@15.10.1)
+      '@launchql/core': 2.11.7(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.5.2)
+      '@launchql/env': 2.4.3(graphql@15.5.2)
+      '@launchql/server-utils': 2.4.3(graphql@15.5.2)
+      '@launchql/types': 2.6.2(graphql@15.5.2)
       pg: 8.16.3
-      pg-cache: 1.3.4(graphql@15.10.1)
+      pg-cache: 1.3.4(graphql@15.5.2)
       pg-copy-streams: 6.0.6
       pg-env: 1.1.0
     transitivePeerDependencies:
@@ -10052,6 +10036,16 @@ snapshots:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
 
+  postgraphile-core@4.14.1(graphql@15.10.1)(pg@8.16.3):
+    dependencies:
+      graphile-build: 4.14.1(graphql@15.10.1)
+      graphile-build-pg: 4.14.1(graphql@15.10.1)(pg@8.16.3)
+      graphql: 15.10.1
+      pg: 8.16.3
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - supports-color
+
   postgraphile-core@4.14.1(graphql@15.5.2)(pg@8.16.3):
     dependencies:
       graphile-build: 4.14.1(graphql@15.5.2)
@@ -10062,10 +10056,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  postgraphile-derived-upload-field@0.0.6(graphql@15.5.2):
+  postgraphile-derived-upload-field@0.0.6(graphql@15.10.1):
     dependencies:
       '@babel/runtime': 7.28.3
-      graphql-upload: 11.0.0(graphql@15.5.2)
+      graphql-upload: 11.0.0(graphql@15.10.1)
     transitivePeerDependencies:
       - graphql
 
@@ -10089,7 +10083,7 @@ snapshots:
       finalhandler: 1.3.1
       graphile-build: 4.14.1(graphql@15.5.2)
       graphile-build-pg: 4.14.1(graphql@15.5.2)(pg@8.16.3)
-      graphile-utils: 4.14.1(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphile-build@4.14.1(graphql@15.10.1))
+      graphile-utils: 4.14.1(graphile-build-pg@4.14.1(graphql@15.5.2)(pg@8.16.3))(graphile-build@4.14.1(graphql@15.5.2))
       graphql: 15.5.2
       graphql-ws: 5.16.2(graphql@15.5.2)
       http-errors: 1.8.1
@@ -10310,11 +10304,6 @@ snapshots:
   rimraf@4.4.1:
     dependencies:
       glob: 9.3.5
-
-  rimraf@6.0.1:
-    dependencies:
-      glob: 11.0.3
-      package-json-from-dist: 1.0.1
 
   rimraf@6.1.0:
     dependencies:
@@ -10619,11 +10608,11 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  supabase-test@0.0.9(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.10.1):
+  supabase-test@0.0.9(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.5.2):
     dependencies:
-      '@launchql/types': 2.6.2(graphql@15.10.1)
+      '@launchql/types': 2.6.2(graphql@15.5.2)
       pg-env: 1.1.0
-      pgsql-test: 2.11.10(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.10.1)
+      pgsql-test: 2.11.10(@babel/core@7.28.0)(@pgsql/types@17.6.1)(graphql@15.5.2)
     transitivePeerDependencies:
       - '@babel/core'
       - '@pgsql/types'

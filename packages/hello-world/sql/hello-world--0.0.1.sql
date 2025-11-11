@@ -1,4 +1,4 @@
-\echo Use "CREATE EXTENSION launchql-rls-demo" to load this file. \quit
+\echo Use "CREATE EXTENSION hello-world" to load this file. \quit
 CREATE SCHEMA IF NOT EXISTS auth;
 
 CREATE OR REPLACE FUNCTION auth.uid() RETURNS uuid LANGUAGE sql STABLE AS $EOFCODE$
