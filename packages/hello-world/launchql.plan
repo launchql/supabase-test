@@ -1,5 +1,5 @@
 %syntax-version=1.0.0
-%project=launchql-rls-demo
-%uri=launchql-rls-demo
+%project=hello-world
+%uri=hello-world
 
 rls-demo 2025-10-05T00:08:10Z launchql <launchql@5b0c196eeb62> # add rls-demo

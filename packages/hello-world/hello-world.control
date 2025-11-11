@@ -1,7 +1,7 @@
-# launchql-rls-demo extension
+# hello-world extension
 comment = 'RLS demo extension with users and products tables'
 default_version = '0.0.1'
-module_pathname = '$libdir/launchql-rls-demo'
+module_pathname = '$libdir/hello-world'
 requires = 'plpgsql,pgcrypto,supabase'
 relocatable = false
 superuser = false

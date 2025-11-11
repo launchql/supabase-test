@@ -1,0 +1,13 @@
+{
+  "name": "@lql-pg/hello-world",
+  "version": "0.0.1",
+  "author": "Interweb <developers@interweb.co>",
+  "description": "Hello World extension with Row Level Security (RLS) demo",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch"
+  }
+}

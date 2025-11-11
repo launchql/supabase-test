@@ -35,7 +35,7 @@ npx supabase start
 pnpm install
 
 # Run tests in watch mode
-cd packages/rls-demo
+cd packages/hello-world
 pnpm test:watch
 ```
 
@@ -44,7 +44,7 @@ pnpm test:watch
 This is a LaunchQL workspace combining `pnpm` and `lql` for modular Postgres packages:
 
 - **`packages/supabase`** - Supabase-focused SQL, tests, and helpers
-- **`packages/rls-demo`** - Demo extension showcasing RLS with users/products
+- **`packages/hello-world`** - Demo extension showcasing RLS with users/products
 
 ## Testing
 
@@ -55,7 +55,7 @@ Run tests in different modes:
 pnpm test
 
 # Watch mode for specific package
-cd packages/rls-demo
+cd packages/hello-world
 pnpm test:watch
 
 # Run Supabase package tests
