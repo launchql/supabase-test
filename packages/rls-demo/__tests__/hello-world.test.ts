@@ -9,11 +9,29 @@ let user1: any;
 let user2: any;
 let user3: any;
 
+const users = [
+  {
+    id: '550e8400-e29b-41d4-a716-446655440001',
+    email: 'tutorial1@example.com',
+    name: 'Tutorial User 1'
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440002',
+    email: 'tutorial2@example.com',
+    name: 'Tutorial User 2'
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440003',
+    email: 'tutorial3@example.com',
+    name: 'Tutorial User 3'
+  }
+];
+
 beforeAll(async () => {
   ({ pg, db, teardown } = await getConnections());
-  user1 = await insertUser(pg, 'tutorial1@example.com');
-  user2 = await insertUser(pg, 'tutorial2@example.com');
-  user3 = await insertUser(pg, 'tutorial3@example.com');
+  user1 = await insertUser(pg, users[0].email, users[0].id);
+  user2 = await insertUser(pg, users[1].email, users[1].id);
+  user3 = await insertUser(pg, users[2].email, users[2].id);
 });
 
 afterAll(async () => {
