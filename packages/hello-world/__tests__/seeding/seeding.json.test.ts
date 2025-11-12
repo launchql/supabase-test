@@ -1,7 +1,7 @@
 import { getConnections, PgTestClient, seed } from 'supabase-test';
 import { pets, users } from './data/seed-data';
 
-// pg is used to have RLS bypass (supabase auth.users table is not granted access)
+// pg is used to have RLS bypass (required to insert into supabase auth.users)
 let db: PgTestClient;
 // db is used to test the RLS policies in test cases
 let pg: PgTestClient;
