@@ -11,5 +11,12 @@
     "test": "jest",
     "test:watch": "jest --watch"
   },
-  "keywords": []
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/launchql/supabase-test-suite"
+  },
+  "homepage": "https://github.com/launchql/supabase-test-suite",
+  "bugs": {
+    "url": "https://github.com/launchql/supabase-test-suite/issues"
+  }
 }
