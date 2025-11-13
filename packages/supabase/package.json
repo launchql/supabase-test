@@ -1,6 +1,6 @@
 {
   "name": "@lql-pg/supabase",
-  "version": "0.0.1",
+  "version": "0.3.0",
   "author": "Interweb <developers@interweb.co>",
   "license": "MIT",
   "publishConfig": {
