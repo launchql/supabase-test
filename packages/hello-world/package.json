@@ -1,5 +1,5 @@
 {
-  "name": "@lql-pg/hello-world",
+  "name": "@pgpm/hello-world",
   "version": "0.3.0",
   "author": "Interweb <developers@interweb.co>",
   "description": "Hello World extension with Row Level Security (RLS) demo",

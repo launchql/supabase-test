@@ -1,4 +1,4 @@
-# @lql-pg/supabase
+# @pgpm/supabase
 
 <p align="center" width="100%">
   <img height="250" src="https://raw.githubusercontent.com/launchql/supabase-test/refs/heads/main/docs/img/logos.svg" />
